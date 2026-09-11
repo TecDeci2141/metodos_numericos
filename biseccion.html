@@ -1,0 +1,1408 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Método de Bisección - Polinomio Cúbico</title>
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #a5b4fc;
+        --secondary: #06b6d4;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --bg-gradient-1: #0f172a;
+        --bg-gradient-2: #1e293b;
+        --bg-gradient-3: #334155;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-1) 0%,
+          var(--bg-gradient-2) 50%,
+          var(--bg-gradient-3) 100%
+        );
+        background-attachment: fixed;
+        color: var(--text-primary);
+        padding: 20px;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            circle at 20% 50%,
+            rgba(99, 102, 241, 0.15) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(6, 182, 212, 0.15) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 20%,
+            rgba(245, 158, 11, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* HEADER */
+      .main-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 40px 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(99, 102, 241, 0.2) 0%,
+          rgba(6, 182, 212, 0.2) 100%
+        );
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--card-border);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .main-header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: shimmer 8s infinite linear;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .main-header h1 {
+        font-size: 42px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          #fff 0%,
+          var(--primary-light) 50%,
+          var(--secondary) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        position: relative;
+        letter-spacing: -1px;
+      }
+
+      .main-header .subtitle {
+        color: var(--text-secondary);
+        font-size: 16px;
+        font-weight: 400;
+        position: relative;
+      }
+
+      /* PANELS */
+      .panel {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        border-radius: var(--radius-lg);
+        padding: 30px;
+        margin-bottom: 25px;
+        border: 1px solid var(--card-border);
+        box-shadow: var(--shadow-lg);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        animation: slideUp 0.6s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .panel:hover {
+        box-shadow: var(--shadow-xl);
+      }
+
+      .panel h2 {
+        color: var(--text-primary);
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+      }
+
+      .panel h2 .icon {
+        font-size: 28px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+      }
+
+      /* FORM */
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 18px;
+        align-items: end;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text-secondary);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input {
+        padding: 14px 16px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 2px solid var(--card-border);
+        border-radius: var(--radius-md);
+        font-size: 15px;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: rgba(15, 23, 42, 0.8);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+      }
+
+      .form-group input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .tooltip {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        font-style: italic;
+      }
+
+      /* BUTTONS */
+      .btn {
+        padding: 14px 32px;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: fit-content;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary) 0%, #0891b2 100%);
+        box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+      }
+
+      .btn-secondary:hover {
+        box-shadow: 0 8px 25px rgba(6, 182, 212, 0.6);
+      }
+
+      /* MESSAGES */
+      .error-box {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.15) 0%,
+          rgba(239, 68, 68, 0.05) 100%
+        );
+        border-left: 4px solid var(--danger);
+        padding: 16px 20px;
+        border-radius: var(--radius-md);
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #fca5a5;
+        backdrop-filter: blur(10px);
+        animation: shake 0.5s ease;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        75% {
+          transform: translateX(5px);
+        }
+      }
+
+      .success-box {
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.15) 0%,
+          rgba(16, 185, 129, 0.05) 100%
+        );
+        border-left: 4px solid var(--success);
+        padding: 16px 20px;
+        border-radius: var(--radius-md);
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #6ee7b7;
+        backdrop-filter: blur(10px);
+      }
+
+      /* FUNCTION DISPLAY */
+      .function-display {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        padding: 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(99, 102, 241, 0.1) 0%,
+          rgba(6, 182, 212, 0.1) 100%
+        );
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        font-family: "Courier New", monospace;
+        letter-spacing: 1px;
+      }
+
+      /* GRAPH CONTROLS */
+      .graph-controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: rgba(15, 23, 42, 0.4);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--card-border);
+      }
+
+      /* CANVAS */
+      canvas {
+        width: 100%;
+        height: 420px;
+        border-radius: var(--radius-md);
+        background: white;
+        display: block;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* ROOT LOCATION CARD */
+      .root-location-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 35px;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        margin-bottom: 20px;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .root-location-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: pulse 3s infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+      }
+
+      .root-location-card .root-title {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        opacity: 0.9;
+        position: relative;
+        font-weight: 600;
+      }
+
+      .root-location-card .root-value {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+        position: relative;
+        font-family: "Courier New", monospace;
+      }
+
+      .root-location-card .root-details {
+        font-size: 14px;
+        opacity: 0.95;
+        margin-top: 10px;
+        position: relative;
+        line-height: 1.8;
+      }
+
+      .root-location-card .root-type {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+      }
+
+      .root-type.exact {
+        background: rgba(16, 185, 129, 0.9);
+        color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+      }
+
+      .root-type.approximate {
+        background: rgba(245, 158, 11, 0.9);
+        color: white;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.5);
+      }
+
+      /* INTERVAL INFO */
+      .interval-info {
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.1) 0%,
+          rgba(245, 158, 11, 0.05) 100%
+        );
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        padding: 20px;
+        border-radius: var(--radius-md);
+        font-size: 14px;
+        line-height: 1.8;
+        color: #fcd34d;
+      }
+
+      .interval-info strong {
+        color: #fbbf24;
+      }
+
+      /* RESULTS GRID */
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .result-card {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 41, 59, 0.8) 0%,
+          rgba(15, 23, 42, 0.8) 100%
+        );
+        border-left: 4px solid var(--primary);
+        padding: 20px;
+        border-radius: var(--radius-md);
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid var(--card-border);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .result-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .result-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .result-card:hover::before {
+        opacity: 1;
+      }
+
+      .result-card .label {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .result-card .value {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text-primary);
+        font-family: "Courier New", monospace;
+      }
+
+      /* TABLE */
+      .table-container {
+        overflow-x: auto;
+        border-radius: var(--radius-md);
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid var(--card-border);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      th {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        padding: 16px 12px;
+        text-align: center;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      }
+
+      td {
+        padding: 14px 12px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: var(--text-secondary);
+        font-family: "Courier New", monospace;
+        font-weight: 500;
+        transition: background 0.2s ease;
+      }
+
+      tr:nth-child(even) td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      tr:hover td {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--text-primary);
+      }
+
+      .fraction {
+        font-family: "Courier New", monospace;
+        font-weight: 700;
+        color: var(--text-primary);
+        font-size: 14px;
+      }
+
+      .criterion-left {
+        color: #f87171;
+        font-weight: 700;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 12px;
+      }
+      .criterion-right {
+        color: #38bdf8;
+        font-weight: 700;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 12px;
+      }
+      .criterion-found {
+        color: #34d399;
+        font-weight: 700;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 12px;
+      }
+
+      /* SCROLLBAR */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--secondary)
+        );
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+        .main-header h1 {
+          font-size: 28px;
+        }
+        .panel {
+          padding: 20px;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .root-location-card .root-value {
+          font-size: 32px;
+        }
+        .results-grid {
+          grid-template-columns: 1fr;
+        }
+        .graph-controls {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      /* LOADING ANIMATION */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .panel {
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      .panel:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .panel:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .panel:nth-child(4) {
+        animation-delay: 0.3s;
+      }
+      .panel:nth-child(5) {
+        animation-delay: 0.4s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+      <div class="main-header">
+        <h1>🧮 Método de Bisección</h1>
+        <div class="subtitle">
+          Resolución de polinomios cúbicos con visualización gráfica
+        </div>
+      </div>
+
+      <!-- Panel de entrada -->
+      <div class="panel">
+        <h2><span class="icon">️</span> Configuración de la Función</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Coef. a (x³)</label>
+            <input type="number" id="coefA" step="any" placeholder="0" />
+          </div>
+          <div class="form-group">
+            <label>Coef. b (x²)</label>
+            <input type="number" id="coefB" step="any" placeholder="0" />
+          </div>
+          <div class="form-group">
+            <label>Coef. c (x)</label>
+            <input type="number" id="coefC" step="any" placeholder="0" />
+          </div>
+          <div class="form-group">
+            <label>Coef. d (cte)</label>
+            <input type="number" id="coefD" step="any" placeholder="0" />
+          </div>
+          <div class="form-group">
+            <label>Intervalo inferior (a)</label>
+            <input type="number" id="xl" step="any" placeholder="-3" />
+          </div>
+          <div class="form-group">
+            <label>Intervalo superior (b)</label>
+            <input type="number" id="xu" step="any" placeholder="6" />
+          </div>
+          <div class="form-group">
+            <label>Iteraciones</label>
+            <input
+              type="number"
+              id="iteraciones"
+              min="1"
+              max="100"
+              placeholder="10"
+            />
+          </div>
+          <div class="form-group">
+            <label>Tolerancia (opcional)</label>
+            <input
+              type="number"
+              id="tolerancia"
+              step="any"
+              min="0"
+              value="0.0001"
+            />
+            <div class="tooltip">Error máximo aceptable</div>
+          </div>
+          <button class="btn" onclick="calcular()">▶ Calcular</button>
+        </div>
+      </div>
+
+      <!-- Mensajes de estado -->
+      <div id="mensajeBox"></div>
+
+      <!-- Gráfica -->
+      <div class="panel" id="graficaPanel" style="display: none">
+        <h2><span class="icon">📈</span> Gráfica de la Función</h2>
+        <div class="function-display" id="funcionDisplay">
+          f(x) = ax³ + bx² + cx + d
+        </div>
+        <div class="graph-controls">
+          <div class="form-group">
+            <label>X mínimo</label>
+            <input type="number" id="xMin" step="any" value="-5" />
+          </div>
+          <div class="form-group">
+            <label>X máximo</label>
+            <input type="number" id="xMax" step="any" value="5" />
+          </div>
+          <div class="form-group">
+            <label>Y mínimo</label>
+            <input type="number" id="yMin" step="any" value="-10" />
+          </div>
+          <div class="form-group">
+            <label>Y máximo</label>
+            <input type="number" id="yMax" step="any" value="10" />
+          </div>
+          <button class="btn btn-secondary" onclick="redibujarGrafica()">
+            🔄 Redibujar
+          </button>
+        </div>
+        <canvas id="grafica" width="1200" height="420"></canvas>
+      </div>
+
+      <!-- UBICACIÓN DE LA RAÍZ -->
+      <div class="panel" id="raizPanel" style="display: none">
+        <h2><span class="icon"></span> Ubicación de la Raíz</h2>
+        <div id="rootLocationContent"></div>
+      </div>
+
+      <!-- Tabla de iteraciones -->
+      <div class="panel" id="tablaPanel" style="display: none">
+        <h2><span class="icon">📋</span> Tabla Completa de Iteraciones</h2>
+        <div class="table-container">
+          <table id="tablaIteraciones">
+            <thead>
+              <tr>
+                <th>Iter.</th>
+                <th>xl</th>
+                <th>xu</th>
+                <th>xr</th>
+                <th>f(xr)</th>
+                <th>Error Abs. (Ea)</th>
+                <th>Error Rel. (Er)</th>
+                <th>Error Rel. %</th>
+                <th>Ubicación de la raíz</th>
+              </tr>
+            </thead>
+            <tbody id="tablaBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Resultados Finales Resumidos -->
+      <div class="panel" id="resultadosPanel" style="display: none">
+        <h2><span class="icon"></span> Resultados Finales</h2>
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="label">Raíz aproximada (xr)</div>
+            <div class="value" id="raizFinal">-</div>
+          </div>
+          <div class="result-card">
+            <div class="label">f(xr) final</div>
+            <div class="value" id="fxrFinal">-</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Error Absoluto (Ea)</div>
+            <div class="value" id="eaFinal">-</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Error Relativo %</div>
+            <div class="value" id="erFinal">-</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Intervalo Final</div>
+            <div class="value" id="intervaloFinal">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Funciones auxiliares para formatear
+      const fmt2 = (n) => Number(n).toFixed(2);
+
+      // ============ CONVERSIÓN DE DECIMAL A FRACCIÓN ============
+      function mcd(a, b) {
+        a = Math.abs(Math.round(a));
+        b = Math.abs(Math.round(b));
+        while (b) {
+          [a, b] = [b, a % b];
+        }
+        return a;
+      }
+
+      function decimalAFraccion(n) {
+        if (n === 0) return "0";
+        if (!isFinite(n)) return "";
+
+        const signo = n < 0 ? "-" : "";
+        n = Math.abs(n);
+
+        const multiplicador = 10000;
+        let numerador = Math.round(n * multiplicador);
+        let denominador = multiplicador;
+
+        const divisor = mcd(numerador, denominador);
+        numerador /= divisor;
+        denominador /= divisor;
+
+        if (denominador === 1) {
+          return signo + numerador;
+        }
+
+        return signo + numerador + "/" + denominador;
+      }
+
+      // ============ GENERADOR DE FUNCIÓN POLINÓMICA ============
+      function crearFuncionPolinomio(a, b, c, d) {
+        return function (x) {
+          return a * Math.pow(x, 3) + b * Math.pow(x, 2) + c * x + d;
+        };
+      }
+
+      // ============ MÉTODO DE BISECCIÓN ============
+      function metodoBiseccion(f, a, b, maxIter, tol) {
+        const resultados = [];
+        let xl = a,
+          xu = b;
+        let fl = f(xl),
+          fu = f(xu);
+
+        if (fl * fu > 0) {
+          throw new Error(
+            `f(${decimalAFraccion(xl)})=${decimalAFraccion(fl)} y f(${decimalAFraccion(xu)})=${decimalAFraccion(fu)} tienen el MISMO signo. No hay garantía de raíz en [${decimalAFraccion(xl)}, ${decimalAFraccion(xu)}].`,
+          );
+        }
+
+        let xrAnterior = null;
+        let raizExactaEncontrada = false;
+        let iteracionRaizExacta = null;
+        let detenidoPorErrorCero = false;
+        let iteracionDetencion = null;
+
+        for (let i = 1; i <= maxIter; i++) {
+          const xr = (xl + xu) / 2;
+          const fr = f(xr);
+
+          let ea = 0,
+            er = 0,
+            erPct = 0;
+
+          if (xrAnterior !== null && xr !== 0) {
+            ea = Math.abs(xr - xrAnterior);
+            er = ea / Math.abs(xr);
+            erPct = er * 100;
+          } else {
+            erPct = 100;
+          }
+
+          let criterio = "";
+          let criterioClass = "";
+          let esRaizExacta = false;
+
+          if (Math.abs(fr) < 1e-15) {
+            criterio = "¡Raíz exacta encontrada!";
+            criterioClass = "criterion-found";
+            esRaizExacta = true;
+            if (!raizExactaEncontrada) {
+              raizExactaEncontrada = true;
+              iteracionRaizExacta = i;
+            }
+          } else if (fl * fr < 0) {
+            xu = xr;
+            fu = fr;
+            criterio = `f(xl)·f(xr)<0 → raíz en [xl, xr]`;
+            criterioClass = "criterion-left";
+          } else {
+            xl = xr;
+            fl = fr;
+            criterio = `f(xl)·f(xr)>0 → raíz en [xr, xu]`;
+            criterioClass = "criterion-right";
+          }
+
+          resultados.push({
+            iter: i,
+            xl: xl,
+            xu: xu,
+            xr: xr,
+            fr: fr,
+            ea: ea,
+            er: er,
+            erPct: erPct,
+            criterio: criterio,
+            criterioClass: criterioClass,
+            esRaizExacta: esRaizExacta,
+          });
+
+          xrAnterior = xr;
+
+          if (Math.abs(fr) < 1e-15) {
+            break;
+          }
+
+          if (i > 1 && ea <= 1e-6) {
+            detenidoPorErrorCero = true;
+            iteracionDetencion = i;
+            break;
+          }
+        }
+
+        return {
+          resultados: resultados,
+          raizExacta: raizExactaEncontrada,
+          iteracionRaiz: iteracionRaizExacta,
+          detenidoPorError: detenidoPorErrorCero,
+          iteracionDetencion: iteracionDetencion,
+        };
+      }
+
+      // ============ CÁLCULO PRINCIPAL ============
+      let ultimaFuncion = null;
+      let ultimosResultados = null;
+      let coeficientesActuales = { a: 0, b: 0, c: 0, d: 0 };
+
+      function calcular() {
+        const a = parseFloat(document.getElementById("coefA").value);
+        const b = parseFloat(document.getElementById("coefB").value);
+        const c = parseFloat(document.getElementById("coefC").value);
+        const d = parseFloat(document.getElementById("coefD").value);
+        const xl = parseFloat(document.getElementById("xl").value);
+        const xu = parseFloat(document.getElementById("xu").value);
+        const maxIter = parseInt(document.getElementById("iteraciones").value);
+        const tol =
+          parseFloat(document.getElementById("tolerancia").value) || 0;
+
+        if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
+          mostrarError("Todos los coeficientes deben ser números válidos.");
+          return;
+        }
+        if (isNaN(xl) || isNaN(xu)) {
+          mostrarError("Los intervalos deben ser números válidos.");
+          return;
+        }
+        if (xl >= xu) {
+          mostrarError(
+            "El intervalo inferior debe ser menor que el superior (xl < xu).",
+          );
+          return;
+        }
+        if (isNaN(maxIter) || maxIter < 1) {
+          mostrarError("El número de iteraciones debe ser al menos 1.");
+          return;
+        }
+
+        try {
+          coeficientesActuales = { a, b, c, d };
+          ultimaFuncion = crearFuncionPolinomio(a, b, c, d);
+
+          const signoB = b >= 0 ? "+" : "-";
+          const signoC = c >= 0 ? "+" : "-";
+          const signoD = d >= 0 ? "+" : "-";
+          document.getElementById("funcionDisplay").textContent =
+            `f(x) = ${a}x³ ${signoB} ${Math.abs(b)}x² ${signoC} ${Math.abs(c)}x ${signoD} ${Math.abs(d)}`;
+
+          const {
+            resultados,
+            raizExacta,
+            iteracionRaiz,
+            detenidoPorError,
+            iteracionDetencion,
+          } = metodoBiseccion(ultimaFuncion, xl, xu, maxIter, tol);
+          ultimosResultados = resultados;
+
+          const ultimo = resultados[resultados.length - 1];
+
+          mostrarUbicacionRaiz(
+            ultimo,
+            raizExacta,
+            iteracionRaiz,
+            resultados,
+            detenidoPorError,
+            iteracionDetencion,
+          );
+
+          document.getElementById("raizFinal").innerHTML =
+            `<span class="fraction">${decimalAFraccion(ultimo.xr)}</span>`;
+          document.getElementById("fxrFinal").innerHTML =
+            `<span class="fraction">${decimalAFraccion(ultimo.fr)}</span>`;
+          document.getElementById("eaFinal").innerHTML =
+            `<span class="fraction">${decimalAFraccion(ultimo.ea)}</span>`;
+          document.getElementById("erFinal").textContent =
+            fmt2(ultimo.erPct) + "%";
+          document.getElementById("intervaloFinal").innerHTML =
+            `[<span class="fraction">${decimalAFraccion(ultimo.xl)}</span>, <span class="fraction">${decimalAFraccion(ultimo.xu)}</span>]`;
+
+          let mensajeExito = `✅ Método completado en <strong>${resultados.length}</strong> iteraciones.`;
+
+          if (raizExacta) {
+            mensajeExito += ` <strong>¡Raíz EXACTA encontrada en la iteración ${iteracionRaiz}!</strong>`;
+          } else if (detenidoPorError) {
+            mensajeExito += ` Detenido en iteración ${iteracionDetencion} (error absoluto ≈ 0).`;
+            mensajeExito += ` Raíz aproximada: <strong>x ≈ ${decimalAFraccion(ultimo.xr)}</strong>`;
+          } else {
+            mensajeExito += ` Raíz aproximada: <strong>x ≈ ${decimalAFraccion(ultimo.xr)}</strong>`;
+          }
+
+          document.getElementById("mensajeBox").innerHTML =
+            `<div class="success-box">${mensajeExito}</div>`;
+
+          document.getElementById("resultadosPanel").style.display = "block";
+          document.getElementById("raizPanel").style.display = "block";
+          document.getElementById("tablaPanel").style.display = "block";
+          document.getElementById("graficaPanel").style.display = "block";
+
+          llenarTabla(resultados);
+
+          document.getElementById("xMin").value = Math.min(xl, xu) - 2;
+          document.getElementById("xMax").value = Math.max(xl, xu) + 2;
+          dibujarGrafica();
+        } catch (e) {
+          mostrarError(e.message);
+        }
+      }
+
+      function mostrarUbicacionRaiz(
+        ultimo,
+        raizExacta,
+        iteracionRaiz,
+        todosResultados,
+        detenidoPorError,
+        iteracionDetencion,
+      ) {
+        const contenido = document.getElementById("rootLocationContent");
+
+        let html = "";
+
+        if (raizExacta) {
+          const iterRaiz = todosResultados.find((r) => r.esRaizExacta);
+          if (iterRaiz) {
+            html = `
+        <div class="root-location-card">
+          <div class="root-title">🎯 Raíz EXACTA Encontrada</div>
+          <div class="root-value">x = ${decimalAFraccion(iterRaiz.xr)}</div>
+          <div class="root-details">
+            f(x) = ${decimalAFraccion(iterRaiz.fr)} ≈ 0<br>
+            Encontrada en la iteración #${iterRaiz.iter}
+          </div>
+          <div class="root-type exact">✓ RAÍZ EXACTA</div>
+        </div>
+        <div class="interval-info">
+          <strong>Ubicación:</strong> La raíz se encuentra exactamente en <strong>x = ${decimalAFraccion(iterRaiz.xr)}</strong><br>
+          <strong>Intervalo final:</strong> [${decimalAFraccion(ultimo.xl)}, ${decimalAFraccion(ultimo.xu)}]
+        </div>
+      `;
+          }
+        } else {
+          let detallesDetencion = "";
+          if (detenidoPorError) {
+            detallesDetencion = `<br><strong>Motivo de detención:</strong> Error absoluto ≈ 0 en iteración ${iteracionDetencion}`;
+          }
+
+          html = `
+      <div class="root-location-card">
+        <div class="root-title">📍 Raíz Aproximada</div>
+        <div class="root-value">x ≈ ${decimalAFraccion(ultimo.xr)}</div>
+        <div class="root-details">
+          f(x) = ${decimalAFraccion(ultimo.fr)}<br>
+          Error absoluto: ${decimalAFraccion(ultimo.ea)} | Error relativo: ${fmt2(ultimo.erPct)}%
+          ${detallesDetencion}
+        </div>
+        <div class="root-type approximate">≈ RAÍZ APROXIMADA</div>
+      </div>
+      <div class="interval-info">
+        <strong>Ubicación:</strong> La raíz más aproximada se encuentra en <strong>x ≈ ${decimalAFraccion(ultimo.xr)}</strong><br>
+        <strong>Intervalo que contiene la raíz:</strong> [${decimalAFraccion(ultimo.xl)}, ${decimalAFraccion(ultimo.xu)}]<br>
+        <strong>Precisión:</strong> La raíz real está dentro del intervalo con amplitud ${decimalAFraccion(ultimo.xu - ultimo.xl)}
+      </div>
+    `;
+        }
+
+        contenido.innerHTML = html;
+      }
+
+      function llenarTabla(resultados) {
+        const tbody = document.getElementById("tablaBody");
+        tbody.innerHTML = "";
+
+        resultados.forEach((r) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+      <td><strong>${r.iter}</strong></td>
+      <td class="fraction">${decimalAFraccion(r.xl)}</td>
+      <td class="fraction">${decimalAFraccion(r.xu)}</td>
+      <td class="fraction"><strong>${decimalAFraccion(r.xr)}</strong></td>
+      <td class="fraction">${decimalAFraccion(r.fr)}</td>
+      <td class="fraction">${decimalAFraccion(r.ea)}</td>
+      <td class="fraction">${decimalAFraccion(r.er)}</td>
+      <td>${fmt2(r.erPct)}%</td>
+      <td class="${r.criterioClass}">${r.criterio}</td>
+    `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function mostrarError(msg) {
+        document.getElementById("mensajeBox").innerHTML =
+          `<div class="error-box"> <strong>Error:</strong> ${msg}</div>`;
+        document.getElementById("resultadosPanel").style.display = "none";
+        document.getElementById("raizPanel").style.display = "none";
+        document.getElementById("tablaPanel").style.display = "none";
+        document.getElementById("graficaPanel").style.display = "none";
+      }
+
+      // ============ GRÁFICA CON CANVAS API ============
+      function dibujarGrafica() {
+        if (!ultimaFuncion) return;
+
+        const canvas = document.getElementById("grafica");
+        const ctx = canvas.getContext("2d");
+
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+
+        const W = rect.width;
+        const H = rect.height;
+
+        const xMin = parseFloat(document.getElementById("xMin").value);
+        const xMax = parseFloat(document.getElementById("xMax").value);
+        const yMin = parseFloat(document.getElementById("yMin").value);
+        const yMax = parseFloat(document.getElementById("yMax").value);
+
+        if (isNaN(xMin) || isNaN(xMax) || isNaN(yMin) || isNaN(yMax)) {
+          alert("Todos los rangos de la gráfica deben ser números válidos.");
+          return;
+        }
+
+        if (xMin >= xMax || yMin >= yMax) {
+          alert("Los rangos de la gráfica deben ser válidos (mín < máx).");
+          return;
+        }
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, W, H);
+
+        const toCanvasX = (x) => ((x - xMin) / (xMax - xMin)) * W;
+        const toCanvasY = (y) => H - ((y - yMin) / (yMax - yMin)) * H;
+
+        ctx.strokeStyle = "#e8e8e8";
+        ctx.lineWidth = 1;
+        const xStep = calcularPaso(xMax - xMin);
+        for (let x = Math.ceil(xMin / xStep) * xStep; x <= xMax; x += xStep) {
+          const cx = toCanvasX(x);
+          ctx.beginPath();
+          ctx.moveTo(cx, 0);
+          ctx.lineTo(cx, H);
+          ctx.stroke();
+        }
+        const yStep = calcularPaso(yMax - yMin);
+        for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax; y += yStep) {
+          const cy = toCanvasY(y);
+          ctx.beginPath();
+          ctx.moveTo(0, cy);
+          ctx.lineTo(W, cy);
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 2;
+        if (yMin <= 0 && yMax >= 0) {
+          const cy = toCanvasY(0);
+          ctx.beginPath();
+          ctx.moveTo(0, cy);
+          ctx.lineTo(W, cy);
+          ctx.stroke();
+        }
+        if (xMin <= 0 && xMax >= 0) {
+          const cx = toCanvasX(0);
+          ctx.beginPath();
+          ctx.moveTo(cx, 0);
+          ctx.lineTo(cx, H);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = "#555";
+        ctx.font = "11px sans-serif";
+        ctx.textAlign = "center";
+        for (let x = Math.ceil(xMin / xStep) * xStep; x <= xMax; x += xStep) {
+          if (Math.abs(x) < 1e-10) continue;
+          const cx = toCanvasX(x);
+          const cy = yMin <= 0 && yMax >= 0 ? toCanvasY(0) + 15 : H - 5;
+          ctx.fillText(decimalAFraccion(x), cx, cy);
+        }
+        ctx.textAlign = "right";
+        for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax; y += yStep) {
+          if (Math.abs(y) < 1e-10) continue;
+          const cy = toCanvasY(y);
+          const cx = xMin <= 0 && xMax >= 0 ? toCanvasX(0) - 5 : 5;
+          ctx.fillText(decimalAFraccion(y), cx, cy + 4);
+        }
+
+        ctx.strokeStyle = "#e74c3c";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        let dibujando = false;
+        const pasos = 1000;
+        const dx = (xMax - xMin) / pasos;
+
+        for (let i = 0; i <= pasos; i++) {
+          const x = xMin + i * dx;
+          let y = ultimaFuncion(x);
+          if (!isFinite(y) || Math.abs(y) > 1e6) {
+            dibujando = false;
+            continue;
+          }
+          const cx = toCanvasX(x);
+          const cy = toCanvasY(y);
+          if (
+            dibujando &&
+            Math.abs(cy - toCanvasY(ultimaFuncion(x - dx))) > H * 2
+          )
+            dibujando = false;
+          if (!dibujando) {
+            ctx.moveTo(cx, cy);
+            dibujando = true;
+          } else {
+            ctx.lineTo(cx, cy);
+          }
+        }
+        ctx.stroke();
+
+        if (ultimosResultados && ultimosResultados.length > 0) {
+          const primer = ultimosResultados[0];
+          const cx1 = toCanvasX(primer.xl);
+          const cx2 = toCanvasX(primer.xu);
+          ctx.fillStyle = "rgba(39, 174, 96, 0.15)";
+          ctx.fillRect(cx1, 0, cx2 - cx1, H);
+          ctx.strokeStyle = "#27ae60";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.moveTo(cx1, 0);
+          ctx.lineTo(cx1, H);
+          ctx.moveTo(cx2, 0);
+          ctx.lineTo(cx2, H);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        if (ultimosResultados && ultimosResultados.length > 0) {
+          const ultimo = ultimosResultados[ultimosResultados.length - 1];
+          const cx = toCanvasX(ultimo.xr);
+          const cy = toCanvasY(ultimo.fr);
+          ctx.fillStyle = "#27ae60";
+          ctx.beginPath();
+          ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#fff";
+          ctx.beginPath();
+          ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#27ae60";
+          ctx.font = "bold 12px sans-serif";
+          ctx.textAlign = "left";
+          ctx.fillText(
+            `Raíz ≈ ${decimalAFraccion(ultimo.xr)}`,
+            cx + 12,
+            cy - 10,
+          );
+        }
+      }
+
+      function redibujarGrafica() {
+        dibujarGrafica();
+      }
+
+      function calcularPaso(rango) {
+        const rough = rango / 10;
+        const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+        const norm = rough / mag;
+        let paso = norm < 1.5 ? 1 : norm < 3.5 ? 2 : norm < 7.5 ? 5 : 10;
+        return paso * mag;
+      }
+
+      window.addEventListener("resize", () => {
+        if (ultimaFuncion) dibujarGrafica();
+      });
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") calcular();
+        });
+      });
+    </script>
+  </body>
+</html>
