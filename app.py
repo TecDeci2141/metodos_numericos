@@ -387,16 +387,18 @@ def puntos():
         logger.error(f"Error en /api/puntos: {error}")
         return jsonify({"ok": False, "error": str(error)}), 400
 
-
 # ============================================================================
 # PUNTO DE ENTRADA
 # ============================================================================
 
 if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    
     print("\n======================================")
     print("   MÉTODO DE BISECCIÓN - PYTHON")
     print("======================================")
-    print("Servidor: http://127.0.0.1:5000")
+    print(f"Servidor: http://127.0.0.1:{port}")
     print("======================================\n")
 
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=False)
