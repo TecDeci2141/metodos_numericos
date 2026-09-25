@@ -347,13 +347,13 @@ def calculate_fixed_point(
         except Exception as e:
             raise ValueError(f"Error al evaluar g(x) en iteración {iteration}: {e}")
 
-        absolute_error = abs(next_val - current) if previous is not None or iteration > 1 else None
-        if absolute_error is None and iteration == 1:
-            absolute_error = abs(next_val - current)
+        # Siempre calculamos el error (para la tabla), pero lo ignoramos
+        # para la decisión de parada en las primeras 2 iteraciones.
+        absolute_error = abs(next_val - current)
 
         if next_val != 0:
-            relative_error = absolute_error / abs(next_val) if absolute_error is not None else None
-            relative_error_pct = relative_error * 100 if relative_error is not None else None
+            relative_error = absolute_error / abs(next_val)
+            relative_error_pct = relative_error * 100
         else:
             relative_error = None
             relative_error_pct = None
@@ -362,7 +362,8 @@ def calculate_fixed_point(
         residual = abs(next_val - current)  # |g(x) - x|
 
         criterio = "x ← g(x)"
-        if absolute_error is not None and absolute_error <= tolerance:
+        # Solo consideramos tolerancia a partir de la iteración 3
+        if iteration > 2 and absolute_error <= tolerance:
             criterio = "Tolerancia alcanzada | x ← g(x)"
 
         iteration_row = {
@@ -381,7 +382,8 @@ def calculate_fixed_point(
 
         root = next_val
 
-        if absolute_error is not None and absolute_error <= tolerance:
+        # Ignorar los primeros dos errores para la condición de parada
+        if iteration > 2 and absolute_error <= tolerance:
             stop_reason = "Se alcanzó la tolerancia."
             break
 
@@ -465,6 +467,7 @@ def calculate_aitken(
             criterio = "Â = xₙ − (Δxₙ)² / Δ²xₙ"
             criterio_tipo = "aitken"
 
+        # Siempre calculamos el error (para la tabla)
         if previous_aitken is not None:
             absolute_error = abs(aitken_val - previous_aitken)
             if aitken_val != 0:
@@ -478,7 +481,8 @@ def calculate_aitken(
             relative_error = None
             relative_error_pct = None
 
-        if absolute_error is not None and absolute_error <= tolerance:
+        # Solo consideramos tolerancia a partir de la iteración 3
+        if iteration > 2 and absolute_error is not None and absolute_error <= tolerance:
             criterio += " | Tolerancia alcanzada"
 
         iteration_row = {
@@ -501,7 +505,8 @@ def calculate_aitken(
         root = aitken_val
         previous_aitken = aitken_val
 
-        if absolute_error is not None and absolute_error <= tolerance:
+        # Ignorar los primeros dos errores para la condición de parada
+        if iteration > 2 and absolute_error is not None and absolute_error <= tolerance:
             stop_reason = "Se alcanzó la tolerancia."
             break
 
