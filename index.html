@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Σ Bisección Numérica</title>
+    <title>Σ Métodos Numéricos — Bisección · Punto Fijo · Aitken</title>
 
     <link
       rel="icon"
@@ -138,7 +138,7 @@
 
       .header h1 {
         font-family: "Orbitron", sans-serif;
-        font-size: 3rem;
+        font-size: 2.6rem;
         font-weight: 700;
         background: linear-gradient(135deg, #fff 0%, var(--neon-cyan) 50%, var(--neon-purple) 100%);
         -webkit-background-clip: text;
@@ -155,6 +155,73 @@
         font-size: 1.1rem;
         font-weight: 300;
         letter-spacing: 1px;
+      }
+
+      /* Selector de método */
+      .method-selector {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+      }
+
+      .method-btn {
+        flex: 1;
+        min-width: 140px;
+        padding: 14px 18px;
+        background: rgba(0, 243, 255, 0.05);
+        border: 1px solid var(--border-tech);
+        border-radius: 2px;
+        color: var(--text-secondary);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        box-shadow: none;
+      }
+
+      .method-btn:hover {
+        background: rgba(0, 243, 255, 0.12);
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+        transform: translateY(-2px);
+      }
+
+      .method-btn.active {
+        background: rgba(0, 243, 255, 0.15);
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+      }
+
+      .method-btn .method-icon {
+        font-size: 1.3rem;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .method-btn .method-desc {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        opacity: 0.7;
+        text-transform: none;
+      }
+
+      .fields-biseccion,
+      .fields-puntofijo {
+        display: contents;
+      }
+
+      .hidden-field {
+        display: none !important;
       }
 
       .card {
@@ -660,8 +727,9 @@
 
     <div class="container">
       <div class="header">
-        <div class="header-badge">Sistema de Cálculo Numérico v1.1</div>
-        <h1>Método de Bisección</h1>
+        <div class="header-badge">Sistema de Cálculo Numérico v2.0</div>
+        <h1>Métodos Numéricos</h1>
+        <p>Bisección · Punto Fijo · Aitken (Δ²)</p>
       </div>
 
       <div id="errorBox" class="error">
@@ -674,13 +742,32 @@
           <div class="card-icon">ƒ(x)</div>
           <div>
             <h2>Configuración del Sistema</h2>
-            <div class="card-subtitle">Defina los parámetros de entrada del algoritmo</div>
+            <div class="card-subtitle">Seleccione el método y defina los parámetros de entrada</div>
           </div>
         </div>
 
-        <div class="grid">
+        <!-- Selector de método -->
+        <div class="method-selector" id="methodSelector">
+          <button type="button" class="method-btn active" data-method="biseccion">
+            <span class="method-icon">⊗</span>
+            <span>Bisección</span>
+            <span class="method-desc">Intervalo [xl, xu]</span>
+          </button>
+          <button type="button" class="method-btn" data-method="punto_fijo">
+            <span class="method-icon">↻</span>
+            <span>Punto Fijo</span>
+            <span class="method-desc">x = g(x)</span>
+          </button>
+          <button type="button" class="method-btn" data-method="aitken">
+            <span class="method-icon">Δ²</span>
+            <span>Aitken</span>
+            <span class="method-desc">Aceleración Δ²</span>
+          </button>
+        </div>
+
+        <div class="grid" id="inputGrid">
           <div class="field">
-            <label><span class="label-math">ƒ(x) =</span> Función Objetivo</label>
+            <label id="funcionLabel"><span class="label-math">ƒ(x) =</span> Función Objetivo</label>
             <input id="funcion" class="function-input" type="text" value="x^3 - 4*x + 1" placeholder="Ej: sin(x) + x^2 - e^(-x)" />
             <div id="funcionValidation" class="validation-indicator">
               <span class="validation-dot"></span>
@@ -688,14 +775,21 @@
             </div>
           </div>
 
-          <div class="field">
+          <!-- Campos exclusivos de Bisección -->
+          <div class="field fields-biseccion" id="fieldXl">
             <label><span class="label-math">xₗ</span> Límite Inferior</label>
             <input id="xl" type="number" step="any" value="0" />
           </div>
 
-          <div class="field">
+          <div class="field fields-biseccion" id="fieldXu">
             <label><span class="label-math">xᵤ</span> Límite Superior</label>
             <input id="xu" type="number" step="any" value="1" />
+          </div>
+
+          <!-- Campo exclusivo de Punto Fijo / Aitken -->
+          <div class="field fields-puntofijo hidden-field" id="fieldX0">
+            <label><span class="label-math">x₀</span> Valor Inicial</label>
+            <input id="x0" type="number" step="any" value="0.5" />
           </div>
 
           <div class="field">
@@ -712,23 +806,32 @@
         <div class="presets-section">
           <div class="presets-title"><span>◈</span> Funciones Predefinidas</div>
           <div class="presets-grid" id="presetsGrid">
-            <button class="preset-btn" data-func="x^3 - 4*x + 1" data-xl="0" data-xu="1">x³ - 4x + 1</button>
-            <button class="preset-btn" data-func="e^(-x) - x" data-xl="0" data-xu="1">e⁻ˣ - x</button>
-            <button class="preset-btn" data-func="sin(x) - x/2" data-xl="1" data-xu="2">sin(x) - x/2</button>
-            <button class="preset-btn" data-func="x^2 - 2" data-xl="1" data-xu="2">x² - 2</button>
-            <button class="preset-btn" data-func="cos(x) - x" data-xl="0" data-xu="1">cos(x) - x</button>
-            <button class="preset-btn" data-func="(667.38/x)*(1-e^(-0.146843*x))-40" data-xl="10" data-xu="30">Problema Paracaidista</button>
-            <button class="preset-btn" data-func="ln(x) - 2" data-xl="5" data-xu="10">ln(x) - 2</button>
-            <button class="preset-btn" data-func="sqrt(x) - 3" data-xl="5" data-xu="12">√x - 3</button>
+            <!-- Bisección -->
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="x^3 - 4*x + 1" data-xl="0" data-xu="1">x³ - 4x + 1</button>
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="e^(-x) - x" data-xl="0" data-xu="1">e⁻ˣ - x</button>
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="sin(x) - x/2" data-xl="1" data-xu="2">sin(x) - x/2</button>
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="x^2 - 2" data-xl="1" data-xu="2">x² - 2</button>
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="cos(x) - x" data-xl="0" data-xu="1">cos(x) - x</button>
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="(667.38/x)*(1-e^(-0.146843*x))-40" data-xl="10" data-xu="30">Problema Paracaidista</button>
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="ln(x) - 2" data-xl="5" data-xu="10">ln(x) - 2</button>
+            <button class="preset-btn preset-biseccion" data-method="biseccion" data-func="sqrt(x) - 3" data-xl="5" data-xu="12">√x - 3</button>
+            <!-- Punto Fijo / Aitken (g(x)) -->
+            <button class="preset-btn preset-puntofijo hidden-field" data-method="punto_fijo" data-func="cos(x)" data-x0="0.5">g(x) = cos(x)</button>
+            <button class="preset-btn preset-puntofijo hidden-field" data-method="punto_fijo" data-func="(x^2 + 2)/3" data-x0="1">g(x) = (x²+2)/3</button>
+            <button class="preset-btn preset-puntofijo hidden-field" data-method="punto_fijo" data-func="e^(-x)" data-x0="0.5">g(x) = e⁻ˣ</button>
+            <button class="preset-btn preset-puntofijo hidden-field" data-method="punto_fijo" data-func="(x + 2/x)/2" data-x0="1.5">g(x) = (x+2/x)/2 √2</button>
+            <button class="preset-btn preset-puntofijo hidden-field" data-method="punto_fijo" data-func="0.5*(x + 1/x)" data-x0="1">g(x) = ½(x+1/x)</button>
+            <button class="preset-btn preset-puntofijo hidden-field" data-method="punto_fijo" data-func="sin(x) + 0.5" data-x0="1">g(x) = sin(x)+0.5</button>
           </div>
         </div>
 
-        <div class="help-box">
+        <div class="help-box" id="helpBox">
           <span class="help-icon">∑</span>
-          <div>
+          <div id="helpContent">
             <strong style="color: var(--neon-purple); font-family: &quot;Orbitron&quot;, sans-serif; font-size: 0.75rem; letter-spacing: 1.5px;">SINTAXIS SOPORTADA:</strong>
             <div style="margin-top: 6px">Operadores: +, -, *, /, ^ | Funciones: sin, cos, tan, log, ln, exp, sqrt, abs</div>
             <div style="margin-top: 4px; color: var(--neon-green)">✓ Multiplicación implícita: 2x, 2(x+1), (a)(b) | ✓ Exponentes negativos: e^-2x</div>
+            <div style="margin-top: 8px; color: var(--neon-cyan)" id="helpMethodHint">Bisección: busque raíz de ƒ(x)=0 en [xl, xu] con cambio de signo.</div>
           </div>
         </div>
 
@@ -767,7 +870,7 @@
               <div class="value" id="raiz">---</div>
             </div>
             <div class="result">
-              <div class="label"><span style="color: var(--neon-purple)">◈</span> ƒ(xᵣ)</div>
+              <div class="label" id="labelFxr"><span style="color: var(--neon-purple)">◈</span> ƒ(xᵣ) / g(x)</div>
               <div class="value" id="fxrFinal">---</div>
             </div>
             <div class="result">
@@ -785,18 +888,18 @@
           <div class="card-header">
             <div class="card-icon">[ ]</div>
             <div>
-              <h2>Intervalo Final</h2>
-              <div class="card-subtitle">Límites acotados donde reside la solución</div>
+              <h2 id="cardIntervaloTitle">Intervalo / Valores</h2>
+              <div class="card-subtitle" id="cardIntervaloSubtitle">Límites o valor inicial y solución</div>
             </div>
           </div>
 
           <div class="result-grid">
             <div class="result">
-              <div class="label"><span class="label-math">xₗ</span> Límite Inferior</div>
+              <div class="label" id="labelXlFinal"><span class="label-math">xₗ</span> Límite Inferior</div>
               <div class="value" id="xlFinal">---</div>
             </div>
             <div class="result">
-              <div class="label"><span class="label-math">xᵤ</span> Límite Superior</div>
+              <div class="label" id="labelXuFinal"><span class="label-math">xᵤ</span> Límite Superior</div>
               <div class="value" id="xuFinal">---</div>
             </div>
             <div class="result">
@@ -821,7 +924,7 @@
 
           <div class="table-wrapper">
             <table>
-              <thead>
+              <thead id="tablaHead">
                 <tr>
                   <th>Iter (i)</th><th>xₗ</th><th>xᵤ</th><th>xᵣ</th><th>ƒ(xᵣ)</th><th>Eₐ</th><th>Eᵣ</th><th>Eᵣ %</th><th>Criterio</th>
                 </tr>
@@ -903,6 +1006,7 @@
       const funcionInput = document.getElementById("funcion");
       const xlInput = document.getElementById("xl");
       const xuInput = document.getElementById("xu");
+      const x0Input = document.getElementById("x0");
       const iteracionesInput = document.getElementById("iteraciones");
       const toleranciaInput = document.getElementById("tolerancia");
 
@@ -925,9 +1029,13 @@
       const historyList = document.getElementById("historyList");
       const graphTooltip = document.getElementById("graphTooltip");
       const graphContainer = document.getElementById("graphContainer");
+      const funcionLabel = document.getElementById("funcionLabel");
+      const helpMethodHint = document.getElementById("helpMethodHint");
+      const tablaHead = document.getElementById("tablaHead");
 
       let lastCalculationData = null;
       let validationTimeout = null;
+      let currentMethod = "biseccion";
 
       function formato(numero, decimales = 10) {
         if (numero === null || numero === undefined) return "—";
@@ -1045,12 +1153,77 @@
         validarFuncionLocal(funcionInput.value);
       });
 
+      // ========== SELECTOR DE MÉTODO ==========
+      document.getElementById("methodSelector").addEventListener("click", (e) => {
+        const btn = e.target.closest(".method-btn");
+        if (!btn) return;
+        const method = btn.dataset.method;
+        if (method === currentMethod) return;
+        currentMethod = method;
+
+        document.querySelectorAll(".method-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        actualizarUIPorMetodo(method);
+      });
+
+      function actualizarUIPorMetodo(method) {
+        const isBiseccion = method === "biseccion";
+        const fieldsBiseccion = document.querySelectorAll(".fields-biseccion");
+        const fieldX0 = document.getElementById("fieldX0");
+        const presetsBiseccion = document.querySelectorAll(".preset-biseccion");
+        const presetsPuntoFijo = document.querySelectorAll(".preset-puntofijo");
+
+        fieldsBiseccion.forEach((el) => {
+          if (isBiseccion) el.classList.remove("hidden-field");
+          else el.classList.add("hidden-field");
+        });
+
+        if (isBiseccion) {
+          fieldX0.classList.add("hidden-field");
+          funcionLabel.innerHTML = '<span class="label-math">ƒ(x) =</span> Función Objetivo';
+          helpMethodHint.textContent = "Bisección: busque raíz de ƒ(x)=0 en [xl, xu] con cambio de signo.";
+          presetsBiseccion.forEach((b) => b.classList.remove("hidden-field"));
+          presetsPuntoFijo.forEach((b) => b.classList.add("hidden-field"));
+          if (!funcionInput.value || funcionInput.value.includes("cos(x)") && !funcionInput.value.includes("-")) {
+            funcionInput.value = "x^3 - 4*x + 1";
+            xlInput.value = "0";
+            xuInput.value = "1";
+          }
+        } else {
+          fieldX0.classList.remove("hidden-field");
+          funcionLabel.innerHTML = '<span class="label-math">g(x) =</span> Función de Iteración';
+          if (method === "punto_fijo") {
+            helpMethodHint.textContent = "Punto Fijo: itera xₙ₊₁ = g(xₙ). La función debe ser g(x), no f(x)=0.";
+          } else {
+            helpMethodHint.textContent = "Aitken (Δ²): acelera la secuencia de punto fijo. Ingrese g(x) y x₀.";
+          }
+          presetsBiseccion.forEach((b) => b.classList.add("hidden-field"));
+          presetsPuntoFijo.forEach((b) => b.classList.remove("hidden-field"));
+          if (!funcionInput.value || funcionInput.value.includes("^3") || funcionInput.value.includes("4*x")) {
+            funcionInput.value = "cos(x)";
+            x0Input.value = "0.5";
+          }
+        }
+        validarFuncionLocal(funcionInput.value);
+        mostrarStatus(`Método seleccionado: ${method === "biseccion" ? "Bisección" : method === "punto_fijo" ? "Punto Fijo" : "Aitken"}`);
+      }
+
       document.getElementById("presetsGrid").addEventListener("click", (e) => {
         if (e.target.classList.contains("preset-btn")) {
           const btn = e.target;
+          const method = btn.dataset.method || "biseccion";
+          if (method !== currentMethod) {
+            currentMethod = method;
+            document.querySelectorAll(".method-btn").forEach((b) => {
+              b.classList.toggle("active", b.dataset.method === method);
+            });
+            actualizarUIPorMetodo(method);
+          }
           funcionInput.value = btn.dataset.func;
-          xlInput.value = btn.dataset.xl;
-          xuInput.value = btn.dataset.xu;
+          if (btn.dataset.xl !== undefined) xlInput.value = btn.dataset.xl;
+          if (btn.dataset.xu !== undefined) xuInput.value = btn.dataset.xu;
+          if (btn.dataset.x0 !== undefined) x0Input.value = btn.dataset.x0;
           validarFuncionLocal(funcionInput.value);
           mostrarStatus(`Función cargada: ${btn.textContent}`);
         }
@@ -1063,18 +1236,11 @@
         ocultarStatus();
 
         const funcion = funcionInput.value.trim();
-        const xl = Number(xlInput.value);
-        const xu = Number(xuInput.value);
         const iteraciones = Number(iteracionesInput.value);
         const tolerancia = Number(toleranciaInput.value);
 
         if (!funcion) {
-          mostrarError("La función objetivo no puede estar vacía.");
-          return;
-        }
-
-        if (!Number.isFinite(xl) || !Number.isFinite(xu)) {
-          mostrarError("Los límites xₗ y xᵤ deben ser valores numéricos válidos.");
+          mostrarError("La función no puede estar vacía.");
           return;
         }
 
@@ -1088,17 +1254,43 @@
           return;
         }
 
+        let payload = {
+          metodo: currentMethod,
+          funcion,
+          iteraciones,
+          tolerancia,
+        };
+
+        if (currentMethod === "biseccion") {
+          const xl = Number(xlInput.value);
+          const xu = Number(xuInput.value);
+          if (!Number.isFinite(xl) || !Number.isFinite(xu)) {
+            mostrarError("Los límites xₗ y xᵤ deben ser valores numéricos válidos.");
+            return;
+          }
+          payload.xl = xl;
+          payload.xu = xu;
+        } else {
+          const x0 = Number(x0Input.value);
+          if (!Number.isFinite(x0)) {
+            mostrarError("El valor inicial x₀ debe ser un número válido.");
+            return;
+          }
+          payload.x0 = x0;
+        }
+
         btnCalcular.disabled = true;
         btnText.style.display = "none";
         btnSpinner.style.display = "block";
-        mostrarStatus("Procesando algoritmo de bisección...");
+        const methodNames = { biseccion: "bisección", punto_fijo: "punto fijo", aitken: "Aitken" };
+        mostrarStatus(`Procesando algoritmo de ${methodNames[currentMethod] || currentMethod}...`);
         mostrarProgreso(20);
 
         try {
           const respuesta = await fetch(`${API_URL}/api/calcular`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ funcion, xl, xu, iteraciones, tolerancia }),
+            body: JSON.stringify(payload),
           });
 
           mostrarProgreso(60);
@@ -1110,15 +1302,27 @@
           }
 
           mostrarProgreso(80);
-          lastCalculationData = { ...data, funcionOriginal: funcion };
+          lastCalculationData = { ...data, funcionOriginal: funcion, metodo: currentMethod };
 
           mostrarResultados(data);
-          await dibujarGrafica(funcion, xl, xu, data.raiz, data.tabla);
+
+          // Rango para gráfica
+          let xmin, xmax;
+          if (currentMethod === "biseccion") {
+            xmin = Number(xlInput.value);
+            xmax = Number(xuInput.value);
+          } else {
+            const raiz = data.raiz;
+            const span = Math.max(Math.abs(raiz) * 0.5, 2);
+            xmin = raiz - span;
+            xmax = raiz + span;
+          }
+          await dibujarGrafica(funcion, xmin, xmax, data.raiz, data.tabla);
 
           mostrarProgreso(100);
           mostrarStatus("Cálculo completado exitosamente. Convergencia alcanzada.");
 
-          guardarEnHistorial(funcion, xl, xu, data);
+          guardarEnHistorial(funcion, payload.xl, payload.xu, data, payload.x0);
 
           setTimeout(ocultarProgreso, 1000);
         } catch (error) {
@@ -1138,16 +1342,65 @@
 
         document.getElementById("raiz").textContent = formato(data.raiz);
 
-        const tabla = data.tabla;
+        const tabla = data.tabla || [];
         const ultima = tabla.length > 0 ? tabla[tabla.length - 1] : null;
+        const metodo = data.metodo || currentMethod;
 
-        document.getElementById("fxrFinal").textContent = ultima ? formato(ultima.fxr) : "0";
+        // Valores finales y etiquetas según método
+        const labelFxr = document.getElementById("labelFxr");
+        const labelXl = document.getElementById("labelXlFinal");
+        const labelXu = document.getElementById("labelXuFinal");
+        const cardTitle = document.getElementById("cardIntervaloTitle");
+        const cardSub = document.getElementById("cardIntervaloSubtitle");
+
+        if (metodo === "biseccion") {
+          labelFxr.innerHTML = '<span style="color: var(--neon-purple)">◈</span> ƒ(xᵣ)';
+          labelXl.innerHTML = '<span class="label-math">xₗ</span> Límite Inferior';
+          labelXu.innerHTML = '<span class="label-math">xᵤ</span> Límite Superior';
+          cardTitle.textContent = "Intervalo Final";
+          cardSub.textContent = "Límites acotados donde reside la solución";
+          document.getElementById("fxrFinal").textContent = ultima && ultima.fxr !== undefined ? formato(ultima.fxr) : "0";
+          document.getElementById("xlFinal").textContent = formato(data.intervalo_final[0]);
+          document.getElementById("xuFinal").textContent = formato(data.intervalo_final[1]);
+        } else if (metodo === "punto_fijo") {
+          labelFxr.innerHTML = '<span style="color: var(--neon-purple)">◈</span> g(xₙ)';
+          labelXl.innerHTML = '<span class="label-math">x₀</span> Valor Inicial';
+          labelXu.innerHTML = '<span class="label-math">xᵣ</span> Aproximación';
+          cardTitle.textContent = "Valores del Proceso";
+          cardSub.textContent = "Valor inicial y solución aproximada";
+          document.getElementById("fxrFinal").textContent = ultima && ultima.gxn !== undefined ? formato(ultima.gxn) : "—";
+          document.getElementById("xlFinal").textContent = data.x0 !== undefined ? formato(data.x0) : "—";
+          document.getElementById("xuFinal").textContent = formato(data.raiz);
+        } else {
+          labelFxr.innerHTML = '<span style="color: var(--neon-purple)">◈</span> Â (Aitken)';
+          labelXl.innerHTML = '<span class="label-math">x₀</span> Valor Inicial';
+          labelXu.innerHTML = '<span class="label-math">xᵣ</span> Aproximación';
+          cardTitle.textContent = "Valores del Proceso";
+          cardSub.textContent = "Valor inicial y solución acelerada (Aitken)";
+          document.getElementById("fxrFinal").textContent = ultima && ultima.aitken !== undefined ? formato(ultima.aitken) : "—";
+          document.getElementById("xlFinal").textContent = data.x0 !== undefined ? formato(data.x0) : "—";
+          document.getElementById("xuFinal").textContent = formato(data.raiz);
+        }
+
         document.getElementById("iterFinal").textContent = data.iteraciones_realizadas;
         document.getElementById("criterio").textContent = data.detenido_por;
-        document.getElementById("xlFinal").textContent = formato(data.intervalo_final[0]);
-        document.getElementById("xuFinal").textContent = formato(data.intervalo_final[1]);
-        document.getElementById("eaFinal").textContent = ultima && ultima.ea !== null ? formato(ultima.ea) : "—";
-        document.getElementById("erFinal").textContent = ultima && ultima.er_pct !== null ? formato(ultima.er_pct) + "%" : "—";
+        document.getElementById("eaFinal").textContent = ultima && ultima.ea != null ? formato(ultima.ea) : "—";
+        document.getElementById("erFinal").textContent = ultima && ultima.er_pct != null ? formato(ultima.er_pct) + "%" : "—";
+
+        // Cabecera de tabla según método
+        if (metodo === "biseccion") {
+          tablaHead.innerHTML = `<tr>
+            <th>Iter (i)</th><th>xₗ</th><th>xᵤ</th><th>xᵣ</th><th>ƒ(xᵣ)</th><th>Eₐ</th><th>Eᵣ</th><th>Eᵣ %</th><th>Criterio</th>
+          </tr>`;
+        } else if (metodo === "punto_fijo") {
+          tablaHead.innerHTML = `<tr>
+            <th>Iter (i)</th><th>xₙ</th><th>g(xₙ)</th><th>xᵣ</th><th>|g(x)-x|</th><th>Eₐ</th><th>Eᵣ</th><th>Eᵣ %</th><th>Criterio</th>
+          </tr>`;
+        } else {
+          tablaHead.innerHTML = `<tr>
+            <th>Iter (i)</th><th>xₙ</th><th>xₙ₊₁</th><th>xₙ₊₂</th><th>Â (Aitken)</th><th>Eₐ</th><th>Eᵣ</th><th>Eᵣ %</th><th>Criterio</th>
+          </tr>`;
+        }
 
         const body = document.getElementById("tablaBody");
         body.innerHTML = "";
@@ -1157,26 +1410,52 @@
           tr.style.animation = `fadeInUp 0.4s ease-out ${index * 0.03}s both`;
 
           let criterioClass = "criterio-badge";
-          if (fila.criterio_tipo === "xu_igual_xr") {
-            criterioClass += " xu-igual-xr";
-          } else if (fila.criterio_tipo === "xl_igual_xr") {
-            criterioClass += " xl-igual-xr";
-          } else if (fila.criterio_tipo === "raiz_exacta") {
-            criterioClass += " raiz-exacta";
+          if (fila.criterio_tipo === "xu_igual_xr") criterioClass += " xu-igual-xr";
+          else if (fila.criterio_tipo === "xl_igual_xr") criterioClass += " xl-igual-xr";
+          else if (fila.criterio_tipo === "raiz_exacta") criterioClass += " raiz-exacta";
+          else if (fila.criterio_tipo === "punto_fijo" || fila.criterio_tipo === "aitken") criterioClass += " raiz-exacta";
+          else if (fila.criterio_tipo === "aitken_fallback") criterioClass += " xu-igual-xr";
+
+          let cells = "";
+          if (metodo === "biseccion") {
+            cells = `
+              <td>${fila.iteracion}</td>
+              <td>${formato(fila.xl)}</td>
+              <td>${formato(fila.xu)}</td>
+              <td>${formato(fila.xr)}</td>
+              <td>${formato(fila.fxr)}</td>
+              <td>${formato(fila.ea)}</td>
+              <td>${formato(fila.er)}</td>
+              <td>${fila.er_pct != null ? formato(fila.er_pct) + "%" : "—"}</td>
+              <td class="criterio-cell"><span class="${criterioClass}">${fila.criterio || ""}</span></td>
+            `;
+          } else if (metodo === "punto_fijo") {
+            cells = `
+              <td>${fila.iteracion}</td>
+              <td>${formato(fila.xn)}</td>
+              <td>${formato(fila.gxn)}</td>
+              <td>${formato(fila.xr)}</td>
+              <td>${formato(fila.residual)}</td>
+              <td>${formato(fila.ea)}</td>
+              <td>${formato(fila.er)}</td>
+              <td>${fila.er_pct != null ? formato(fila.er_pct) + "%" : "—"}</td>
+              <td class="criterio-cell"><span class="${criterioClass}">${fila.criterio || ""}</span></td>
+            `;
+          } else {
+            cells = `
+              <td>${fila.iteracion}</td>
+              <td>${formato(fila.xn)}</td>
+              <td>${formato(fila.xn1)}</td>
+              <td>${formato(fila.xn2)}</td>
+              <td>${formato(fila.aitken ?? fila.xr)}</td>
+              <td>${formato(fila.ea)}</td>
+              <td>${formato(fila.er)}</td>
+              <td>${fila.er_pct != null ? formato(fila.er_pct) + "%" : "—"}</td>
+              <td class="criterio-cell"><span class="${criterioClass}">${fila.criterio || ""}</span></td>
+            `;
           }
 
-          tr.innerHTML = `
-            <td>${fila.iteracion}</td>
-            <td>${formato(fila.xl)}</td>
-            <td>${formato(fila.xu)}</td>
-            <td>${formato(fila.xr)}</td>
-            <td>${formato(fila.fxr)}</td>
-            <td>${formato(fila.ea)}</td>
-            <td>${formato(fila.er)}</td>
-            <td>${formato(fila.er_pct)}%</td>
-            <td class="criterio-cell"><span class="${criterioClass}">${fila.criterio}</span></td>
-          `;
-
+          tr.innerHTML = cells;
           body.appendChild(tr);
         });
 
@@ -1418,24 +1697,24 @@
         graphTooltip.classList.remove("show");
       });
 
-      function guardarEnHistorial(funcion, xl, xu, data) {
+      function guardarEnHistorial(funcion, xl, xu, data, x0) {
         const historial = JSON.parse(localStorage.getItem("biseccionHistorial") || "[]");
+        const metodo = data.metodo || currentMethod;
 
         const entrada = {
           id: Date.now(),
           funcion,
-          xl,
-          xu,
+          xl: xl ?? null,
+          xu: xu ?? null,
+          x0: x0 ?? null,
+          metodo,
           raiz: data.raiz,
           iteraciones: data.iteraciones_realizadas,
           fecha: new Date().toLocaleString("es-ES"),
         };
 
         historial.unshift(entrada);
-
-        if (historial.length > 10) {
-          historial.pop();
-        }
+        if (historial.length > 10) historial.pop();
 
         localStorage.setItem("biseccionHistorial", JSON.stringify(historial));
         renderizarHistorial();
@@ -1454,11 +1733,17 @@
         historial.forEach((item) => {
           const div = document.createElement("div");
           div.className = "history-item";
+          const metodoLabel = { biseccion: "Bisección", punto_fijo: "Punto Fijo", aitken: "Aitken" }[item.metodo] || "Bisección";
+          const rango =
+            item.metodo === "biseccion"
+              ? `[${item.xl}, ${item.xu}]`
+              : `x₀=${item.x0 ?? "—"}`;
           div.innerHTML = `
             <div class="history-info">
-              <div class="history-function">ƒ(x) = ${item.funcion}</div>
+              <div class="history-function">${item.metodo === "biseccion" ? "ƒ" : "g"}(x) = ${item.funcion}</div>
               <div class="history-meta">
-                <span>📍 [${item.xl}, ${item.xu}]</span>
+                <span>⚙ ${metodoLabel}</span>
+                <span>📍 ${rango}</span>
                 <span>🎯 xᵣ = ${formato(item.raiz, 6)}</span>
                 <span>📅 ${item.fecha}</span>
               </div>
@@ -1477,9 +1762,18 @@
             const id = parseInt(btn.dataset.id);
             const item = historial.find((h) => h.id === id);
             if (item) {
+              const metodo = item.metodo || "biseccion";
+              if (metodo !== currentMethod) {
+                currentMethod = metodo;
+                document.querySelectorAll(".method-btn").forEach((b) => {
+                  b.classList.toggle("active", b.dataset.method === metodo);
+                });
+                actualizarUIPorMetodo(metodo);
+              }
               funcionInput.value = item.funcion;
-              xlInput.value = item.xl;
-              xuInput.value = item.xu;
+              if (item.xl != null) xlInput.value = item.xl;
+              if (item.xu != null) xuInput.value = item.xu;
+              if (item.x0 != null) x0Input.value = item.x0;
               validarFuncionLocal(funcionInput.value);
               mostrarStatus("Parámetros cargados desde el historial");
             }
@@ -1501,24 +1795,41 @@
         if (!lastCalculationData) return;
 
         const data = lastCalculationData;
-        let csv = "Método de Bisección - Resultados\n\n";
+        const metodo = data.metodo || currentMethod;
+        const metodoNames = { biseccion: "Bisección", punto_fijo: "Punto Fijo", aitken: "Aitken" };
+        let csv = `Método de ${metodoNames[metodo] || metodo} - Resultados\n\n`;
+        csv += `Método:,${metodo}\n`;
         csv += `Función:,${data.funcionOriginal}\n`;
         csv += `Raíz encontrada:,${data.raiz}\n`;
         csv += `Iteraciones:,${data.iteraciones_realizadas}\n`;
         csv += `Criterio de parada:,${data.detenido_por}\n`;
-        csv += `Intervalo final:,${data.intervalo_final[0]} a ${data.intervalo_final[1]}\n\n`;
-        csv += "Iteración,xl,xu,xr,f(xr),Error Absoluto,Error Relativo,Error %,Criterio\n";
 
-        data.tabla.forEach((fila) => {
-          csv += `${fila.iteracion},${fila.xl},${fila.xu},${fila.xr},${fila.fxr},${fila.ea || ""},${fila.er || ""},${fila.er_pct || ""},"${fila.criterio || ""}"\n`;
-        });
+        if (metodo === "biseccion") {
+          csv += `Intervalo final:,${data.intervalo_final[0]} a ${data.intervalo_final[1]}\n\n`;
+          csv += "Iteración,xl,xu,xr,f(xr),Error Absoluto,Error Relativo,Error %,Criterio\n";
+          data.tabla.forEach((fila) => {
+            csv += `${fila.iteracion},${fila.xl},${fila.xu},${fila.xr},${fila.fxr},${fila.ea || ""},${fila.er || ""},${fila.er_pct || ""},"${fila.criterio || ""}"\n`;
+          });
+        } else if (metodo === "punto_fijo") {
+          csv += `x0:,${data.x0}\n\n`;
+          csv += "Iteración,xn,g(xn),xr,residual,Error Absoluto,Error Relativo,Error %,Criterio\n";
+          data.tabla.forEach((fila) => {
+            csv += `${fila.iteracion},${fila.xn},${fila.gxn},${fila.xr},${fila.residual || ""},${fila.ea || ""},${fila.er || ""},${fila.er_pct || ""},"${fila.criterio || ""}"\n`;
+          });
+        } else {
+          csv += `x0:,${data.x0}\n\n`;
+          csv += "Iteración,xn,xn+1,xn+2,Aitken,Error Absoluto,Error Relativo,Error %,Criterio\n";
+          data.tabla.forEach((fila) => {
+            csv += `${fila.iteracion},${fila.xn},${fila.xn1},${fila.xn2},${fila.aitken ?? fila.xr},${fila.ea || ""},${fila.er || ""},${fila.er_pct || ""},"${fila.criterio || ""}"\n`;
+          });
+        }
 
         const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
 
         link.setAttribute("href", url);
-        link.setAttribute("download", `biseccion_${Date.now()}.csv`);
+        link.setAttribute("download", `${metodo}_${Date.now()}.csv`);
         link.style.visibility = "hidden";
         document.body.appendChild(link);
         link.click();
@@ -1531,6 +1842,7 @@
         funcionInput.value = "";
         xlInput.value = "";
         xuInput.value = "";
+        x0Input.value = "";
         iteracionesInput.value = 50;
         toleranciaInput.value = 0.000001;
 
