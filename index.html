@@ -57,6 +57,8 @@
         line-height: 1.6;
         overflow-x: hidden;
         position: relative;
+        display: flex;
+        flex-direction: column;
       }
 
       .math-bg {
@@ -79,72 +81,19 @@
         user-select: none;
       }
 
-      .math-symbol:nth-child(1) {
-        top: 10%;
-        left: 5%;
-        font-size: 4rem;
-        animation-duration: 25s;
-      }
-      .math-symbol:nth-child(2) {
-        top: 20%;
-        right: 10%;
-        font-size: 3rem;
-        animation-duration: 30s;
-        animation-direction: reverse;
-      }
-      .math-symbol:nth-child(3) {
-        top: 60%;
-        left: 15%;
-        font-size: 5rem;
-        animation-duration: 35s;
-      }
-      .math-symbol:nth-child(4) {
-        top: 80%;
-        right: 20%;
-        font-size: 3.5rem;
-        animation-duration: 28s;
-        animation-direction: reverse;
-      }
-      .math-symbol:nth-child(5) {
-        top: 40%;
-        left: 50%;
-        font-size: 6rem;
-        animation-duration: 40s;
-        opacity: 0.02;
-      }
-      .math-symbol:nth-child(6) {
-        top: 15%;
-        left: 40%;
-        font-size: 2.5rem;
-        animation-duration: 22s;
-      }
-      .math-symbol:nth-child(7) {
-        top: 70%;
-        right: 5%;
-        font-size: 4rem;
-        animation-duration: 32s;
-        animation-direction: reverse;
-      }
-      .math-symbol:nth-child(8) {
-        top: 5%;
-        right: 40%;
-        font-size: 3rem;
-        animation-duration: 26s;
-      }
+      .math-symbol:nth-child(1) { top: 10%; left: 5%; font-size: 4rem; animation-duration: 25s; }
+      .math-symbol:nth-child(2) { top: 20%; right: 10%; font-size: 3rem; animation-duration: 30s; animation-direction: reverse; }
+      .math-symbol:nth-child(3) { top: 60%; left: 15%; font-size: 5rem; animation-duration: 35s; }
+      .math-symbol:nth-child(4) { top: 80%; right: 20%; font-size: 3.5rem; animation-duration: 28s; animation-direction: reverse; }
+      .math-symbol:nth-child(5) { top: 40%; left: 50%; font-size: 6rem; animation-duration: 40s; opacity: 0.02; }
+      .math-symbol:nth-child(6) { top: 15%; left: 40%; font-size: 2.5rem; animation-duration: 22s; }
+      .math-symbol:nth-child(7) { top: 70%; right: 5%; font-size: 4rem; animation-duration: 32s; animation-direction: reverse; }
+      .math-symbol:nth-child(8) { top: 5%; right: 40%; font-size: 3rem; animation-duration: 26s; }
 
       @keyframes floatMath {
-        0% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 0.03;
-        }
-        50% {
-          transform: translateY(-30px) rotate(5deg);
-          opacity: 0.06;
-        }
-        100% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 0.03;
-        }
+        0% { transform: translateY(0) rotate(0deg); opacity: 0.03; }
+        50% { transform: translateY(-30px) rotate(5deg); opacity: 0.06; }
+        100% { transform: translateY(0) rotate(0deg); opacity: 0.03; }
       }
 
       .container {
@@ -152,6 +101,7 @@
         margin: 0 auto;
         position: relative;
         z-index: 1;
+        flex: 1;
       }
 
       .header {
@@ -168,12 +118,7 @@
         transform: translateX(-50%);
         width: 200px;
         height: 2px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--neon-cyan),
-          transparent
-        );
+        background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
         box-shadow: 0 0 10px var(--neon-cyan);
       }
 
@@ -195,12 +140,7 @@
         font-family: "Orbitron", sans-serif;
         font-size: 3rem;
         font-weight: 700;
-        background: linear-gradient(
-          135deg,
-          #fff 0%,
-          var(--neon-cyan) 50%,
-          var(--neon-purple) 100%
-        );
+        background: linear-gradient(135deg, #fff 0%, var(--neon-cyan) 50%, var(--neon-purple) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -239,26 +179,9 @@
         transition: all 0.3s ease;
       }
 
-      .card::before {
-        top: -1px;
-        left: -1px;
-        border-right: none;
-        border-bottom: none;
-      }
-
-      .card::after {
-        bottom: -1px;
-        right: -1px;
-        border-left: none;
-        border-top: none;
-      }
-
-      .card:hover::before,
-      .card:hover::after {
-        width: 30px;
-        height: 30px;
-        box-shadow: 0 0 15px var(--neon-cyan);
-      }
+      .card::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+      .card::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+      .card:hover::before, .card:hover::after { width: 30px; height: 30px; box-shadow: 0 0 15px var(--neon-cyan); }
 
       .card-header {
         display: flex;
@@ -306,11 +229,7 @@
         gap: 20px;
       }
 
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
+      .field { display: flex; flex-direction: column; gap: 8px; }
 
       .field label {
         color: var(--neon-cyan);
@@ -345,30 +264,14 @@
 
       input:focus {
         border-color: var(--neon-cyan);
-        box-shadow:
-          0 0 15px rgba(0, 243, 255, 0.2),
-          inset 0 0 10px rgba(0, 243, 255, 0.05);
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(0, 243, 255, 0.05);
         background: rgba(0, 243, 255, 0.02);
       }
 
-      input::placeholder {
-        color: var(--text-dim);
-        font-family: "Rajdhani", sans-serif;
-      }
-
-      input.error {
-        border-color: var(--neon-red);
-        box-shadow: 0 0 15px rgba(255, 56, 96, 0.3);
-      }
-
-      input.valid {
-        border-color: var(--neon-green);
-        box-shadow: 0 0 15px rgba(10, 255, 96, 0.2);
-      }
-
-      .function-input {
-        font-size: 1.1rem;
-      }
+      input::placeholder { color: var(--text-dim); font-family: "Rajdhani", sans-serif; }
+      input.error { border-color: var(--neon-red); box-shadow: 0 0 15px rgba(255, 56, 96, 0.3); }
+      input.valid { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(10, 255, 96, 0.2); }
+      .function-input { font-size: 1.1rem; }
 
       .validation-indicator {
         display: inline-flex;
@@ -380,25 +283,12 @@
         opacity: 0;
         transition: opacity 0.3s ease;
       }
-
-      .validation-indicator.show {
-        opacity: 1;
-      }
-
-      .validation-indicator.valid {
-        color: var(--neon-green);
-      }
-
-      .validation-indicator.invalid {
-        color: var(--neon-red);
-      }
-
+      .validation-indicator.show { opacity: 1; }
+      .validation-indicator.valid { color: var(--neon-green); }
+      .validation-indicator.invalid { color: var(--neon-red); }
       .validation-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: currentColor;
-        box-shadow: 0 0 8px currentColor;
+        width: 8px; height: 8px; border-radius: 50%;
+        background: currentColor; box-shadow: 0 0 8px currentColor;
       }
 
       .presets-section {
@@ -421,11 +311,7 @@
         gap: 8px;
       }
 
-      .presets-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
+      .presets-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 
       .preset-btn {
         flex: none;
@@ -465,12 +351,7 @@
         font-family: "JetBrains Mono", monospace;
       }
 
-      .controls {
-        display: flex;
-        gap: 16px;
-        margin-top: 32px;
-        flex-wrap: wrap;
-      }
+      .controls { display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
 
       button {
         flex: 1;
@@ -499,59 +380,27 @@
       button::before {
         content: "";
         position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.4),
-          transparent
-        );
+        top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
         transition: left 0.5s;
       }
 
-      button:hover:not(:disabled)::before {
-        left: 100%;
-      }
-
-      button:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
-        background: #fff;
-      }
-
-      button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        filter: grayscale(0.8);
-      }
+      button:hover:not(:disabled)::before { left: 100%; }
+      button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 243, 255, 0.5); background: #fff; }
+      button:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.8); }
 
       button.secondary {
-        background: transparent;
-        color: var(--neon-cyan);
-        border-color: var(--border-tech);
-        box-shadow: none;
+        background: transparent; color: var(--neon-cyan); border-color: var(--border-tech); box-shadow: none;
       }
-
       button.secondary:hover:not(:disabled) {
-        background: rgba(0, 243, 255, 0.1);
-        border-color: var(--neon-cyan);
-        box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        background: rgba(0, 243, 255, 0.1); border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
       }
 
       button.export {
-        background: transparent;
-        color: var(--neon-green);
-        border-color: rgba(10, 255, 96, 0.3);
-        box-shadow: none;
+        background: transparent; color: var(--neon-green); border-color: rgba(10, 255, 96, 0.3); box-shadow: none;
       }
-
       button.export:hover:not(:disabled) {
-        background: rgba(10, 255, 96, 0.1);
-        border-color: var(--neon-green);
-        box-shadow: 0 0 20px rgba(10, 255, 96, 0.3);
+        background: rgba(10, 255, 96, 0.1); border-color: var(--neon-green); box-shadow: 0 0 20px rgba(10, 255, 96, 0.3);
       }
 
       .status-bar {
@@ -569,533 +418,230 @@
         opacity: 0;
         transition: opacity 0.3s ease;
       }
-
-      .status-bar.active {
-        opacity: 1;
-      }
-
-      .status-bar.error {
-        background: rgba(255, 56, 96, 0.05);
-        border-color: rgba(255, 56, 96, 0.3);
-        color: var(--neon-red);
-      }
-
+      .status-bar.active { opacity: 1; }
+      .status-bar.error { background: rgba(255, 56, 96, 0.05); border-color: rgba(255, 56, 96, 0.3); color: var(--neon-red); }
       .status-dot {
-        width: 8px;
-        height: 8px;
-        background: var(--neon-green);
-        border-radius: 50%;
-        box-shadow: 0 0 10px var(--neon-green);
-        animation: pulse 1.5s ease-in-out infinite;
+        width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%;
+        box-shadow: 0 0 10px var(--neon-green); animation: pulse 1.5s ease-in-out infinite;
       }
-
-      .status-bar.error .status-dot {
-        background: var(--neon-red);
-        box-shadow: 0 0 10px var(--neon-red);
-      }
+      .status-bar.error .status-dot { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
 
       .progress-container {
-        margin-top: 12px;
-        height: 4px;
-        background: rgba(0, 243, 255, 0.1);
-        border-radius: 2px;
-        overflow: hidden;
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        margin-top: 12px; height: 4px; background: rgba(0, 243, 255, 0.1);
+        border-radius: 2px; overflow: hidden; opacity: 0; transition: opacity 0.3s ease;
       }
-
-      .progress-container.active {
-        opacity: 1;
-      }
-
+      .progress-container.active { opacity: 1; }
       .progress-bar {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(
-          90deg,
-          var(--neon-cyan),
-          var(--neon-purple)
-        );
-        box-shadow: 0 0 10px var(--neon-cyan);
-        transition: width 0.3s ease;
+        height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+        box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.3s ease;
       }
 
-      .result-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-      }
+      .result-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 
       .result {
-        background: rgba(0, 243, 255, 0.03);
-        border: 1px solid var(--border-tech);
-        border-radius: 2px;
-        padding: 20px;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
+        background: rgba(0, 243, 255, 0.03); border: 1px solid var(--border-tech);
+        border-radius: 2px; padding: 20px; position: relative; overflow: hidden; transition: all 0.3s ease;
       }
-
       .result::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          var(--neon-cyan),
-          var(--neon-purple)
-        );
-        opacity: 0.5;
+        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); opacity: 0.5;
       }
-
       .result:hover {
-        transform: translateY(-3px);
-        background: rgba(0, 243, 255, 0.06);
-        border-color: var(--border-active);
-        box-shadow: var(--shadow-neon);
+        transform: translateY(-3px); background: rgba(0, 243, 255, 0.06);
+        border-color: var(--border-active); box-shadow: var(--shadow-neon);
       }
-
       .result .label {
-        color: var(--text-secondary);
-        font-family: "Orbitron", sans-serif;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        color: var(--text-secondary); font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+        letter-spacing: 1.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
       }
-
       .result .value {
-        font-size: 1.8rem;
-        font-weight: 600;
-        font-family: "JetBrains Mono", monospace;
-        color: var(--text-primary);
-        word-break: break-all;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        font-size: 1.8rem; font-weight: 600; font-family: "JetBrains Mono", monospace;
+        color: var(--text-primary); word-break: break-all; text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
       }
-
-      .result.highlight .value {
-        color: var(--neon-cyan);
-        text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
-      }
+      .result.highlight .value { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 243, 255, 0.5); }
 
       .table-wrapper {
-        overflow-x: auto;
-        border-radius: 2px;
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--border-tech);
+        overflow-x: auto; border-radius: 2px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-tech);
       }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 1100px;
-      }
-
+      table { width: 100%; border-collapse: collapse; min-width: 1100px; }
       th {
-        text-align: center;
-        background: rgba(0, 243, 255, 0.08);
-        color: var(--neon-cyan);
-        padding: 16px 12px;
-        font-family: "Orbitron", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        border-bottom: 2px solid var(--border-tech);
+        text-align: center; background: rgba(0, 243, 255, 0.08); color: var(--neon-cyan);
+        padding: 16px 12px; font-family: "Orbitron", sans-serif; font-size: 0.75rem;
+        font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid var(--border-tech);
       }
-
       td {
-        text-align: center;
-        padding: 14px 12px;
-        border-bottom: 1px solid rgba(0, 243, 255, 0.05);
-        color: var(--text-primary);
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.9rem;
-        transition: all 0.2s ease;
+        text-align: center; padding: 14px 12px; border-bottom: 1px solid rgba(0, 243, 255, 0.05);
+        color: var(--text-primary); font-family: "JetBrains Mono", monospace; font-size: 0.9rem; transition: all 0.2s ease;
       }
+      tr:hover td { background: rgba(0, 243, 255, 0.05); color: var(--neon-cyan); }
+      tr:last-child td { border-bottom: none; }
+      td:nth-child(4) { color: var(--neon-green); font-weight: 600; text-shadow: 0 0 10px rgba(10, 255, 96, 0.3); }
 
-      tr:hover td {
-        background: rgba(0, 243, 255, 0.05);
-        color: var(--neon-cyan);
-      }
-
-      tr:last-child td {
-        border-bottom: none;
-      }
-
-      td:nth-child(4) {
-        color: var(--neon-green);
-        font-weight: 600;
-        text-shadow: 0 0 10px rgba(10, 255, 96, 0.3);
-      }
-
-      /* Columna de criterio */
-      td.criterio-cell {
-        text-align: left;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.8rem;
-        white-space: nowrap;
-        padding: 10px 12px;
-      }
-
-      .criterio-badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 3px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-      }
-
-      .criterio-badge.xu-igual-xr {
-        background: rgba(255, 149, 0, 0.15);
-        color: var(--neon-orange);
-        border: 1px solid rgba(255, 149, 0, 0.3);
-        text-shadow: 0 0 8px rgba(255, 149, 0, 0.4);
-      }
-
-      .criterio-badge.xl-igual-xr {
-        background: rgba(188, 19, 254, 0.15);
-        color: var(--neon-purple);
-        border: 1px solid rgba(188, 19, 254, 0.3);
-        text-shadow: 0 0 8px rgba(188, 19, 254, 0.4);
-      }
-
-      .criterio-badge.raiz-exacta {
-        background: rgba(10, 255, 96, 0.15);
-        color: var(--neon-green);
-        border: 1px solid rgba(10, 255, 96, 0.3);
-        text-shadow: 0 0 8px rgba(10, 255, 96, 0.4);
-      }
+      td.criterio-cell { text-align: left; font-family: "JetBrains Mono", monospace; font-size: 0.8rem; white-space: nowrap; padding: 10px 12px; }
+      .criterio-badge { display: inline-block; padding: 4px 10px; border-radius: 3px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.5px; }
+      .criterio-badge.xu-igual-xr { background: rgba(255, 149, 0, 0.15); color: var(--neon-orange); border: 1px solid rgba(255, 149, 0, 0.3); text-shadow: 0 0 8px rgba(255, 149, 0, 0.4); }
+      .criterio-badge.xl-igual-xr { background: rgba(188, 19, 254, 0.15); color: var(--neon-purple); border: 1px solid rgba(188, 19, 254, 0.3); text-shadow: 0 0 8px rgba(188, 19, 254, 0.4); }
+      .criterio-badge.raiz-exacta { background: rgba(10, 255, 96, 0.15); color: var(--neon-green); border: 1px solid rgba(10, 255, 96, 0.3); text-shadow: 0 0 8px rgba(10, 255, 96, 0.4); }
 
       .graph-container {
-        position: relative;
-        width: 100%;
-        height: 500px;
-        background: radial-gradient(
-          circle at center,
-          rgba(0, 243, 255, 0.03) 0%,
-          rgba(2, 4, 10, 0.9) 100%
-        );
-        border-radius: 2px;
-        overflow: hidden;
-        border: 1px solid var(--border-tech);
-        box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+        position: relative; width: 100%; height: 500px;
+        background: radial-gradient(circle at center, rgba(0, 243, 255, 0.03) 0%, rgba(2, 4, 10, 0.9) 100%);
+        border-radius: 2px; overflow: hidden; border: 1px solid var(--border-tech); box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
       }
-
       .graph-container::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image:
-          linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-        background-size: 50px 50px;
-        pointer-events: none;
+        content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px; pointer-events: none; z-index: 1;
+      }
+      .graph-header {
+        position: absolute; top: 0; left: 0; right: 0; padding: 16px 20px;
+        background: linear-gradient(180deg, rgba(2, 4, 10, 0.95), transparent);
+        z-index: 10; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-tech);
+      }
+      .graph-title {
+        font-family: "Orbitron", sans-serif; font-size: 0.85rem; font-weight: 600;
+        color: var(--neon-cyan); letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; gap: 10px;
+      }
+      .graph-legend { display: flex; gap: 20px; font-family: "JetBrains Mono", monospace; font-size: 0.75rem; color: var(--text-secondary); }
+      .legend-item { display: flex; align-items: center; gap: 8px; }
+      .legend-color { width: 20px; height: 2px; border-radius: 1px; }
+
+      canvas { width: 100%; height: 100%; position: relative; z-index: 2; }
+
+      .graph-tooltip {
+        position: absolute; background: rgba(2, 4, 10, 0.95); border: 1px solid var(--neon-cyan);
+        border-radius: 2px; padding: 8px 12px; font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem; color: var(--neon-cyan); pointer-events: none; z-index: 100;
+        opacity: 0; transition: opacity 0.15s ease; box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); white-space: nowrap;
+      }
+      .graph-tooltip.show { opacity: 1; }
+
+      .history-list { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 8px; }
+      .history-list::-webkit-scrollbar { width: 6px; }
+      .history-list::-webkit-scrollbar-track { background: rgba(0, 243, 255, 0.05); }
+      .history-list::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 3px; }
+
+      .history-item {
+        background: rgba(0, 243, 255, 0.03); border: 1px solid var(--border-tech);
+        border-radius: 2px; padding: 12px 16px; display: flex; justify-content: space-between;
+        align-items: center; gap: 16px; transition: all 0.2s ease; cursor: pointer;
+      }
+      .history-item:hover { background: rgba(0, 243, 255, 0.08); border-color: var(--border-active); }
+      .history-info { flex: 1; min-width: 0; }
+      .history-function { font-family: "JetBrains Mono", monospace; font-size: 0.9rem; color: var(--neon-cyan); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+      .history-meta { font-family: "JetBrains Mono", monospace; font-size: 0.7rem; color: var(--text-secondary); display: flex; gap: 12px; }
+      .history-actions { display: flex; gap: 8px; }
+
+      .history-btn {
+        background: transparent; border: 1px solid var(--border-tech); color: var(--text-secondary);
+        padding: 4px 8px; font-size: 0.75rem; border-radius: 2px; cursor: pointer; transition: all 0.2s;
+        flex: none; min-width: auto; box-shadow: none;
+      }
+      .history-btn:hover { color: var(--neon-cyan); border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
+      .history-btn.delete:hover { color: var(--neon-red); border-color: var(--neon-red); background: rgba(255, 56, 96, 0.1); }
+      .empty-history { text-align: center; padding: 40px 20px; color: var(--text-dim); font-family: "JetBrains Mono", monospace; font-size: 0.9rem; }
+
+      .error {
+        display: none; background: rgba(255, 56, 96, 0.1); border: 1px solid rgba(255, 56, 96, 0.4);
+        border-left: 4px solid var(--neon-red); color: #ff6b6b; border-radius: 2px; padding: 16px 20px;
+        margin-bottom: 24px; align-items: center; gap: 12px; font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem; animation: shake 0.4s ease-out;
+      }
+      .error.show { display: flex; }
+      .error-icon { font-size: 1.2rem; }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--neon-green); }
+        50% { opacity: 0.4; box-shadow: 0 0 2px var(--neon-green); }
+      }
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-8px); }
+        40% { transform: translateX(8px); }
+        60% { transform: translateX(-4px); }
+        80% { transform: translateX(4px); }
+      }
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .spinner {
+        width: 18px; height: 18px; border: 2px solid rgba(2, 4, 10, 0.3);
+        border-top-color: var(--bg-deep); border-radius: 50%; animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* =========================================
+         FOOTER / PIE DE PÁGINA (NUEVO)
+         ========================================= */
+      .main-footer {
+        margin-top: 60px;
+        padding: 30px 20px;
+        text-align: center;
+        border-top: 1px solid var(--border-tech);
+        background: linear-gradient(180deg, transparent, rgba(0, 243, 255, 0.02));
+        position: relative;
         z-index: 1;
       }
 
-      .graph-header {
+      .main-footer::before {
+        content: "";
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: 16px 20px;
-        background: linear-gradient(180deg, rgba(2, 4, 10, 0.95), transparent);
-        z-index: 10;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid var(--border-tech);
+        top: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+        box-shadow: 0 0 10px var(--neon-cyan);
       }
 
-      .graph-title {
+      .footer-content p {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin: 6px 0;
+        letter-spacing: 0.5px;
+      }
+
+      .footer-content .brand {
+        color: var(--neon-cyan);
         font-family: "Orbitron", sans-serif;
-        font-size: 0.85rem;
         font-weight: 600;
-        color: var(--neon-cyan);
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+      }
+
+      .footer-content .ampersand {
+        color: var(--neon-purple);
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        margin: 0 8px;
+      }
+
+      .footer-sub {
+        font-family: "JetBrains Mono", monospace !important;
+        font-size: 0.7rem !important;
+        color: var(--text-dim) !important;
+        margin-top: 16px !important;
         text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .graph-legend {
-        display: flex;
-        gap: 20px;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-      }
-
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .legend-color {
-        width: 20px;
-        height: 2px;
-        border-radius: 1px;
-      }
-
-      canvas {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        z-index: 2;
-      }
-
-      .graph-tooltip {
-        position: absolute;
-        background: rgba(2, 4, 10, 0.95);
-        border: 1px solid var(--neon-cyan);
-        border-radius: 2px;
-        padding: 8px 12px;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.75rem;
-        color: var(--neon-cyan);
-        pointer-events: none;
-        z-index: 100;
-        opacity: 0;
-        transition: opacity 0.15s ease;
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-        white-space: nowrap;
-      }
-
-      .graph-tooltip.show {
-        opacity: 1;
-      }
-
-      .history-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        max-height: 300px;
-        overflow-y: auto;
-        padding-right: 8px;
-      }
-
-      .history-list::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .history-list::-webkit-scrollbar-track {
-        background: rgba(0, 243, 255, 0.05);
-      }
-
-      .history-list::-webkit-scrollbar-thumb {
-        background: var(--neon-cyan);
-        border-radius: 3px;
-      }
-
-      .history-item {
-        background: rgba(0, 243, 255, 0.03);
-        border: 1px solid var(--border-tech);
-        border-radius: 2px;
-        padding: 12px 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        transition: all 0.2s ease;
-        cursor: pointer;
-      }
-
-      .history-item:hover {
-        background: rgba(0, 243, 255, 0.08);
-        border-color: var(--border-active);
-      }
-
-      .history-info {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .history-function {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.9rem;
-        color: var(--neon-cyan);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 4px;
-      }
-
-      .history-meta {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.7rem;
-        color: var(--text-secondary);
-        display: flex;
-        gap: 12px;
-      }
-
-      .history-actions {
-        display: flex;
-        gap: 8px;
-      }
-
-      .history-btn {
-        background: transparent;
-        border: 1px solid var(--border-tech);
-        color: var(--text-secondary);
-        padding: 4px 8px;
-        font-size: 0.75rem;
-        border-radius: 2px;
-        cursor: pointer;
-        transition: all 0.2s;
-        flex: none;
-        min-width: auto;
-        box-shadow: none;
-      }
-
-      .history-btn:hover {
-        color: var(--neon-cyan);
-        border-color: var(--neon-cyan);
-        background: rgba(0, 243, 255, 0.1);
-      }
-
-      .history-btn.delete:hover {
-        color: var(--neon-red);
-        border-color: var(--neon-red);
-        background: rgba(255, 56, 96, 0.1);
-      }
-
-      .empty-history {
-        text-align: center;
-        padding: 40px 20px;
-        color: var(--text-dim);
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.9rem;
-      }
-
-      .error {
-        display: none;
-        background: rgba(255, 56, 96, 0.1);
-        border: 1px solid rgba(255, 56, 96, 0.4);
-        border-left: 4px solid var(--neon-red);
-        color: #ff6b6b;
-        border-radius: 2px;
-        padding: 16px 20px;
-        margin-bottom: 24px;
-        align-items: center;
-        gap: 12px;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.9rem;
-        animation: shake 0.4s ease-out;
-      }
-
-      .error.show {
-        display: flex;
-      }
-
-      .error-icon {
-        font-size: 1.2rem;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-          box-shadow: 0 0 10px var(--neon-green);
-        }
-        50% {
-          opacity: 0.4;
-          box-shadow: 0 0 2px var(--neon-green);
-        }
-      }
-
-      @keyframes shake {
-        0%,
-        100% {
-          transform: translateX(0);
-        }
-        20% {
-          transform: translateX(-8px);
-        }
-        40% {
-          transform: translateX(8px);
-        }
-        60% {
-          transform: translateX(-4px);
-        }
-        80% {
-          transform: translateX(4px);
-        }
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .spinner {
-        width: 18px;
-        height: 18px;
-        border: 2px solid rgba(2, 4, 10, 0.3);
-        border-top-color: var(--bg-deep);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
+        letter-spacing: 1px;
       }
 
       @media (max-width: 1200px) {
-        .grid {
-          grid-template-columns: 1fr 1fr;
-        }
-        .result-grid {
-          grid-template-columns: 1fr 1fr;
-        }
+        .grid { grid-template-columns: 1fr 1fr; }
+        .result-grid { grid-template-columns: 1fr 1fr; }
       }
 
       @media (max-width: 768px) {
-        body {
-          padding: 20px 15px;
-        }
-        .header h1 {
-          font-size: 2rem;
-          letter-spacing: 1px;
-        }
-        .grid,
-        .controls,
-        .result-grid {
-          grid-template-columns: 1fr;
-        }
-        .controls {
-          flex-direction: column;
-        }
-        button {
-          width: 100%;
-        }
-        .graph-container {
-          height: 350px;
-        }
-        .card {
-          padding: 20px;
-        }
+        body { padding: 20px 15px; }
+        .header h1 { font-size: 2rem; letter-spacing: 1px; }
+        .grid, .controls, .result-grid { grid-template-columns: 1fr; }
+        .controls { flex-direction: column; }
+        button { width: 100%; }
+        .graph-container { height: 350px; }
+        .card { padding: 20px; }
       }
     </style>
   </head>
@@ -1116,9 +662,7 @@
       <div class="header">
         <div class="header-badge">Sistema de Cálculo Numérico v1.1</div>
         <h1>Método de Bisección</h1>
-        <p>
-          Algoritmo de búsqueda de raíces con precisión computacional avanzada
-        </p>
+        <p>Algoritmo de búsqueda de raíces con precisión computacional avanzada</p>
       </div>
 
       <div id="errorBox" class="error">
@@ -1131,25 +675,14 @@
           <div class="card-icon">ƒ(x)</div>
           <div>
             <h2>Configuración del Sistema</h2>
-            <div class="card-subtitle">
-              Defina los parámetros de entrada del algoritmo
-            </div>
+            <div class="card-subtitle">Defina los parámetros de entrada del algoritmo</div>
           </div>
         </div>
 
         <div class="grid">
           <div class="field">
-            <label>
-              <span class="label-math">ƒ(x) =</span>
-              Función Objetivo
-            </label>
-            <input
-              id="funcion"
-              class="function-input"
-              type="text"
-              value="x^3 - 4*x + 1"
-              placeholder="Ej: sin(x) + x^2 - e^(-x)"
-            />
+            <label><span class="label-math">ƒ(x) =</span> Función Objetivo</label>
+            <input id="funcion" class="function-input" type="text" value="x^3 - 4*x + 1" placeholder="Ej: sin(x) + x^2 - e^(-x)" />
             <div id="funcionValidation" class="validation-indicator">
               <span class="validation-dot"></span>
               <span id="funcionValidationText">Válido</span>
@@ -1157,34 +690,22 @@
           </div>
 
           <div class="field">
-            <label>
-              <span class="label-math">xₗ</span>
-              Límite Inferior
-            </label>
+            <label><span class="label-math">xₗ</span> Límite Inferior</label>
             <input id="xl" type="number" step="any" value="0" />
           </div>
 
           <div class="field">
-            <label>
-              <span class="label-math">xᵤ</span>
-              Límite Superior
-            </label>
+            <label><span class="label-math">xᵤ</span> Límite Superior</label>
             <input id="xu" type="number" step="any" value="1" />
           </div>
 
           <div class="field">
-            <label>
-              <span class="label-math">n</span>
-              Iteraciones
-            </label>
+            <label><span class="label-math">n</span> Iteraciones</label>
             <input id="iteraciones" type="number" min="1" value="50" />
           </div>
 
           <div class="field">
-            <label>
-              <span class="label-math">ε</span>
-              Tolerancia
-            </label>
+            <label><span class="label-math">ε</span> Tolerancia</label>
             <input id="tolerancia" type="number" step="any" value="0.000001" />
           </div>
         </div>
@@ -1192,93 +713,23 @@
         <div class="presets-section">
           <div class="presets-title"><span>◈</span> Funciones Predefinidas</div>
           <div class="presets-grid" id="presetsGrid">
-            <button
-              class="preset-btn"
-              data-func="x^3 - 4*x + 1"
-              data-xl="0"
-              data-xu="1"
-            >
-              x³ - 4x + 1
-            </button>
-            <button
-              class="preset-btn"
-              data-func="e^(-x) - x"
-              data-xl="0"
-              data-xu="1"
-            >
-              e⁻ˣ - x
-            </button>
-            <button
-              class="preset-btn"
-              data-func="sin(x) - x/2"
-              data-xl="1"
-              data-xu="2"
-            >
-              sin(x) - x/2
-            </button>
-            <button
-              class="preset-btn"
-              data-func="x^2 - 2"
-              data-xl="1"
-              data-xu="2"
-            >
-              x² - 2
-            </button>
-            <button
-              class="preset-btn"
-              data-func="cos(x) - x"
-              data-xl="0"
-              data-xu="1"
-            >
-              cos(x) - x
-            </button>
-            <button
-              class="preset-btn"
-              data-func="(667.38/x)*(1-e^(-0.146843*x))-40"
-              data-xl="10"
-              data-xu="30"
-            >
-              Problema Paracaidista
-            </button>
-            <button
-              class="preset-btn"
-              data-func="ln(x) - 2"
-              data-xl="5"
-              data-xu="10"
-            >
-              ln(x) - 2
-            </button>
-            <button
-              class="preset-btn"
-              data-func="sqrt(x) - 3"
-              data-xl="5"
-              data-xu="12"
-            >
-              √x - 3
-            </button>
+            <button class="preset-btn" data-func="x^3 - 4*x + 1" data-xl="0" data-xu="1">x³ - 4x + 1</button>
+            <button class="preset-btn" data-func="e^(-x) - x" data-xl="0" data-xu="1">e⁻ˣ - x</button>
+            <button class="preset-btn" data-func="sin(x) - x/2" data-xl="1" data-xu="2">sin(x) - x/2</button>
+            <button class="preset-btn" data-func="x^2 - 2" data-xl="1" data-xu="2">x² - 2</button>
+            <button class="preset-btn" data-func="cos(x) - x" data-xl="0" data-xu="1">cos(x) - x</button>
+            <button class="preset-btn" data-func="(667.38/x)*(1-e^(-0.146843*x))-40" data-xl="10" data-xu="30">Problema Paracaidista</button>
+            <button class="preset-btn" data-func="ln(x) - 2" data-xl="5" data-xu="10">ln(x) - 2</button>
+            <button class="preset-btn" data-func="sqrt(x) - 3" data-xl="5" data-xu="12">√x - 3</button>
           </div>
         </div>
 
         <div class="help-box">
           <span class="help-icon">∑</span>
           <div>
-            <strong
-              style="
-                color: var(--neon-purple);
-                font-family: &quot;Orbitron&quot;, sans-serif;
-                font-size: 0.75rem;
-                letter-spacing: 1.5px;
-              "
-              >SINTAXIS SOPORTADA:</strong
-            >
-            <div style="margin-top: 6px">
-              Operadores: +, -, *, /, ^ | Funciones: sin, cos, tan, log, ln,
-              exp, sqrt, abs
-            </div>
-            <div style="margin-top: 4px; color: var(--neon-green)">
-              ✓ Multiplicación implícita: 2x, 2(x+1), (a)(b) | ✓ Exponentes
-              negativos: e^-2x
-            </div>
+            <strong style="color: var(--neon-purple); font-family: &quot;Orbitron&quot;, sans-serif; font-size: 0.75rem; letter-spacing: 1.5px;">SINTAXIS SOPORTADA:</strong>
+            <div style="margin-top: 6px">Operadores: +, -, *, /, ^ | Funciones: sin, cos, tan, log, ln, exp, sqrt, abs</div>
+            <div style="margin-top: 4px; color: var(--neon-green)">✓ Multiplicación implícita: 2x, 2(x+1), (a)(b) | ✓ Exponentes negativos: e^-2x</div>
           </div>
         </div>
 
@@ -1287,9 +738,7 @@
             <span id="btnText">INICIAR CÁLCULO</span>
             <div id="btnSpinner" class="spinner" style="display: none"></div>
           </button>
-
           <button id="btnLimpiar" class="secondary">RESETEAR</button>
-
           <button id="btnExportar" class="export" disabled>EXPORTAR CSV</button>
         </div>
 
@@ -1306,50 +755,28 @@
       <div id="resultados" style="display: none">
         <div class="card">
           <div class="card-header">
-            <div
-              class="card-icon"
-              style="
-                color: var(--neon-green);
-                border-color: rgba(10, 255, 96, 0.3);
-                background: rgba(10, 255, 96, 0.1);
-              "
-            >
-              ✓
-            </div>
+            <div class="card-icon" style="color: var(--neon-green); border-color: rgba(10, 255, 96, 0.3); background: rgba(10, 255, 96, 0.1);">✓</div>
             <div>
               <h2>Resultados del Procesamiento</h2>
-              <div class="card-subtitle">
-                Métricas de convergencia y solución aproximada
-              </div>
+              <div class="card-subtitle">Métricas de convergencia y solución aproximada</div>
             </div>
           </div>
 
           <div class="result-grid">
             <div class="result highlight">
-              <div class="label">
-                <span style="color: var(--neon-cyan)">◈</span> Raíz (xᵣ)
-              </div>
+              <div class="label"><span style="color: var(--neon-cyan)">◈</span> Raíz (xᵣ)</div>
               <div class="value" id="raiz">---</div>
             </div>
-
             <div class="result">
-              <div class="label">
-                <span style="color: var(--neon-purple)">◈</span> ƒ(xᵣ)
-              </div>
+              <div class="label"><span style="color: var(--neon-purple)">◈</span> ƒ(xᵣ)</div>
               <div class="value" id="fxrFinal">---</div>
             </div>
-
             <div class="result">
-              <div class="label">
-                <span style="color: var(--neon-blue)">◈</span> Iteraciones
-              </div>
+              <div class="label"><span style="color: var(--neon-blue)">◈</span> Iteraciones</div>
               <div class="value" id="iterFinal">---</div>
             </div>
-
             <div class="result">
-              <div class="label">
-                <span style="color: var(--neon-green)">◈</span> Criterio
-              </div>
+              <div class="label"><span style="color: var(--neon-green)">◈</span> Criterio</div>
               <div class="value" id="criterio" style="font-size: 1rem">---</div>
             </div>
           </div>
@@ -1360,38 +787,25 @@
             <div class="card-icon">[ ]</div>
             <div>
               <h2>Intervalo Final</h2>
-              <div class="card-subtitle">
-                Límites acotados donde reside la solución
-              </div>
+              <div class="card-subtitle">Límites acotados donde reside la solución</div>
             </div>
           </div>
 
           <div class="result-grid">
             <div class="result">
-              <div class="label">
-                <span class="label-math">xₗ</span> Límite Inferior
-              </div>
+              <div class="label"><span class="label-math">xₗ</span> Límite Inferior</div>
               <div class="value" id="xlFinal">---</div>
             </div>
-
             <div class="result">
-              <div class="label">
-                <span class="label-math">xᵤ</span> Límite Superior
-              </div>
+              <div class="label"><span class="label-math">xᵤ</span> Límite Superior</div>
               <div class="value" id="xuFinal">---</div>
             </div>
-
             <div class="result">
-              <div class="label">
-                <span class="label-math">Eₐ</span> Error Absoluto
-              </div>
+              <div class="label"><span class="label-math">Eₐ</span> Error Absoluto</div>
               <div class="value" id="eaFinal">---</div>
             </div>
-
             <div class="result">
-              <div class="label">
-                <span class="label-math">Eᵣ</span> Error Relativo
-              </div>
+              <div class="label"><span class="label-math">Eᵣ</span> Error Relativo</div>
               <div class="value" id="erFinal">---</div>
             </div>
           </div>
@@ -1402,10 +816,7 @@
             <div class="card-icon">≡</div>
             <div>
               <h2>Registro de Iteraciones</h2>
-              <div class="card-subtitle">
-                Historial completo del proceso de convergencia con criterios de
-                decisión
-              </div>
+              <div class="card-subtitle">Historial completo del proceso de convergencia con criterios de decisión</div>
             </div>
           </div>
 
@@ -1413,15 +824,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Iter (i)</th>
-                  <th>xₗ</th>
-                  <th>xᵤ</th>
-                  <th>xᵣ</th>
-                  <th>ƒ(xᵣ)</th>
-                  <th>Eₐ</th>
-                  <th>Eᵣ</th>
-                  <th>Eᵣ %</th>
-                  <th>Criterio</th>
+                  <th>Iter (i)</th><th>xₗ</th><th>xᵤ</th><th>xᵣ</th><th>ƒ(xᵣ)</th><th>Eₐ</th><th>Eᵣ</th><th>Eᵣ %</th><th>Criterio</th>
                 </tr>
               </thead>
               <tbody id="tablaBody"></tbody>
@@ -1434,52 +837,26 @@
             <div class="card-icon">📈</div>
             <div>
               <h2>Visualización Gráfica</h2>
-              <div class="card-subtitle">
-                Representación vectorial con puntos de bisección animados
-              </div>
+              <div class="card-subtitle">Representación vectorial con puntos de bisección animados</div>
             </div>
           </div>
 
           <div class="graph-container" id="graphContainer">
             <div class="graph-header">
               <div class="graph-title">
-                <span style="font-family: &quot;JetBrains Mono&quot;">◉</span>
-                VISUALIZADOR
+                <span style="font-family: &quot;JetBrains Mono&quot;">◉</span> VISUALIZADOR
               </div>
               <div class="graph-legend">
                 <div class="legend-item">
-                  <div
-                    class="legend-color"
-                    style="
-                      background: var(--neon-cyan);
-                      box-shadow: 0 0 10px var(--neon-cyan);
-                    "
-                  ></div>
+                  <div class="legend-color" style="background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan);"></div>
                   <span>ƒ(x)</span>
                 </div>
                 <div class="legend-item">
-                  <div
-                    class="legend-color"
-                    style="
-                      background: var(--neon-green);
-                      width: 8px;
-                      height: 8px;
-                      border-radius: 50%;
-                      box-shadow: 0 0 10px var(--neon-green);
-                    "
-                  ></div>
+                  <div class="legend-color" style="background: var(--neon-green); width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px var(--neon-green);"></div>
                   <span>Raíz</span>
                 </div>
                 <div class="legend-item">
-                  <div
-                    class="legend-color"
-                    style="
-                      background: var(--neon-orange);
-                      width: 6px;
-                      height: 6px;
-                      border-radius: 50%;
-                    "
-                  ></div>
+                  <div class="legend-color" style="background: var(--neon-orange); width: 6px; height: 6px; border-radius: 50%;"></div>
                   <span>Bisecciones</span>
                 </div>
               </div>
@@ -1495,9 +872,7 @@
           <div class="card-icon">⏱</div>
           <div>
             <h2>Historial de Cálculos</h2>
-            <div class="card-subtitle">
-              Últimos cálculos realizados (guardado localmente)
-            </div>
+            <div class="card-subtitle">Últimos cálculos realizados (guardado localmente)</div>
           </div>
         </div>
 
@@ -1506,6 +881,22 @@
         </div>
       </div>
     </div>
+
+    <!-- =========================================
+         PIE DE PÁGINA / FOOTER (NUEVO)
+         ========================================= -->
+    <footer class="main-footer">
+      <div class="footer-content">
+        <p>
+          &copy; <span id="currentYear"></span> 
+          <span class="brand">TechNova Group</span> 
+          <span class="ampersand">&</span> 
+          <span class="brand">Nova Industries</span>.
+        </p>
+        <p>Todos los derechos reservados en todas las áreas donde corresponda.</p>
+        <p class="footer-sub">Desarrollado con precisión computacional avanzada.</p>
+      </div>
+    </footer>
 
     <script>
       const API_URL = "";
@@ -1531,9 +922,7 @@
 
       const resultados = document.getElementById("resultados");
       const funcionValidation = document.getElementById("funcionValidation");
-      const funcionValidationText = document.getElementById(
-        "funcionValidationText",
-      );
+      const funcionValidationText = document.getElementById("funcionValidationText");
       const historyList = document.getElementById("historyList");
       const graphTooltip = document.getElementById("graphTooltip");
       const graphContainer = document.getElementById("graphContainer");
@@ -1544,9 +933,7 @@
       function formato(numero, decimales = 10) {
         if (numero === null || numero === undefined) return "—";
         if (!Number.isFinite(numero)) return "—";
-        return Number(numero)
-          .toFixed(decimales)
-          .replace(/\.?0+$/, "");
+        return Number(numero).toFixed(decimales).replace(/\.?0+$/, "");
       }
 
       function mostrarError(mensaje) {
@@ -1599,10 +986,7 @@
           if (char === "(") balance++;
           if (char === ")") balance--;
           if (balance < 0) {
-            mostrarResultadoValidacion(
-              false,
-              "✗ Demasiados paréntesis de cierre",
-            );
+            mostrarResultadoValidacion(false, "✗ Demasiados paréntesis de cierre");
             return;
           }
         }
@@ -1610,38 +994,21 @@
         const textoNormalizado = texto
           .replace(/\s/g, "")
           .replace(/[0-9x+\-*/^().,e]/g, "")
-          .replace(
-            /sin|cos|tan|tg|sen|asin|acos|atan|sinh|cosh|tanh|sqrt|log|ln|exp|abs|pi/g,
-            "",
-          );
+          .replace(/sin|cos|tan|tg|sen|asin|acos|atan|sinh|cosh|tanh|sqrt|log|ln|exp|abs|pi/g, "");
 
-        if (
-          textoNormalizado.length > 0 &&
-          /[@#$%&!?¿¡]/.test(textoNormalizado)
-        ) {
-          mostrarResultadoValidacion(
-            false,
-            "✗ Caracteres inválidos detectados",
-          );
+        if (textoNormalizado.length > 0 && /[@#$%&!?¿¡]/.test(textoNormalizado)) {
+          mostrarResultadoValidacion(false, "✗ Caracteres inválidos detectados");
           return;
         }
 
         if (balance > 0) {
-          mostrarResultadoValidacion(
-            true,
-            "⏳ Expresión incompleta",
-            "warning",
-          );
+          mostrarResultadoValidacion(true, "⏳ Expresión incompleta", "warning");
           return;
         }
 
         const ultimoChar = texto.trim().slice(-1);
         if (["+", "-", "*", "/", "^"].includes(ultimoChar)) {
-          mostrarResultadoValidacion(
-            true,
-            "⏳ Expresión incompleta",
-            "warning",
-          );
+          mostrarResultadoValidacion(true, "⏳ Expresión incompleta", "warning");
           return;
         }
 
@@ -1655,10 +1022,8 @@
 
         if (tipo === "warning") {
           funcionValidation.style.color = "var(--neon-orange)";
-          funcionValidation.querySelector(".validation-dot").style.background =
-            "var(--neon-orange)";
-          funcionValidation.querySelector(".validation-dot").style.boxShadow =
-            "0 0 8px var(--neon-orange)";
+          funcionValidation.querySelector(".validation-dot").style.background = "var(--neon-orange)";
+          funcionValidation.querySelector(".validation-dot").style.boxShadow = "0 0 8px var(--neon-orange)";
         } else if (esValido) {
           funcionValidation.style.color = "var(--neon-green)";
           funcionValidation.classList.add("valid");
@@ -1710,9 +1075,7 @@
         }
 
         if (!Number.isFinite(xl) || !Number.isFinite(xu)) {
-          mostrarError(
-            "Los límites xₗ y xᵤ deben ser valores numéricos válidos.",
-          );
+          mostrarError("Los límites xₗ y xᵤ deben ser valores numéricos válidos.");
           return;
         }
 
@@ -1754,9 +1117,7 @@
           await dibujarGrafica(funcion, xl, xu, data.raiz, data.tabla);
 
           mostrarProgreso(100);
-          mostrarStatus(
-            "Cálculo completado exitosamente. Convergencia alcanzada.",
-          );
+          mostrarStatus("Cálculo completado exitosamente. Convergencia alcanzada.");
 
           guardarEnHistorial(funcion, xl, xu, data);
 
@@ -1781,22 +1142,13 @@
         const tabla = data.tabla;
         const ultima = tabla.length > 0 ? tabla[tabla.length - 1] : null;
 
-        document.getElementById("fxrFinal").textContent = ultima
-          ? formato(ultima.fxr)
-          : "0";
-        document.getElementById("iterFinal").textContent =
-          data.iteraciones_realizadas;
+        document.getElementById("fxrFinal").textContent = ultima ? formato(ultima.fxr) : "0";
+        document.getElementById("iterFinal").textContent = data.iteraciones_realizadas;
         document.getElementById("criterio").textContent = data.detenido_por;
-        document.getElementById("xlFinal").textContent = formato(
-          data.intervalo_final[0],
-        );
-        document.getElementById("xuFinal").textContent = formato(
-          data.intervalo_final[1],
-        );
-        document.getElementById("eaFinal").textContent =
-          ultima && ultima.ea !== null ? formato(ultima.ea) : "—";
-        document.getElementById("erFinal").textContent =
-          ultima && ultima.er_pct !== null ? formato(ultima.er_pct) + "%" : "—";
+        document.getElementById("xlFinal").textContent = formato(data.intervalo_final[0]);
+        document.getElementById("xuFinal").textContent = formato(data.intervalo_final[1]);
+        document.getElementById("eaFinal").textContent = ultima && ultima.ea !== null ? formato(ultima.ea) : "—";
+        document.getElementById("erFinal").textContent = ultima && ultima.er_pct !== null ? formato(ultima.er_pct) + "%" : "—";
 
         const body = document.getElementById("tablaBody");
         body.innerHTML = "";
@@ -1805,7 +1157,6 @@
           const tr = document.createElement("tr");
           tr.style.animation = `fadeInUp 0.4s ease-out ${index * 0.03}s both`;
 
-          // Determinar clase CSS según el tipo de criterio
           let criterioClass = "criterio-badge";
           if (fila.criterio_tipo === "xu_igual_xr") {
             criterioClass += " xu-igual-xr";
@@ -1886,11 +1237,7 @@
         }
 
         function py(y) {
-          return (
-            height -
-            padding -
-            ((y - ymin) / (ymax - ymin)) * (height - padding * 2)
-          );
+          return height - padding - ((y - ymin) / (ymax - ymin)) * (height - padding * 2);
         }
 
         canvas.dataset.px = px.toString();
@@ -1972,11 +1319,7 @@
               const xr = fila.xr;
               const fxr = fila.fxr;
 
-              if (
-                xr >= xmin &&
-                xr <= xmax &&
-                Math.abs(fxr) < Math.abs(ymax - ymin)
-              ) {
+              if (xr >= xmin && xr <= xmax && Math.abs(fxr) < Math.abs(ymax - ymin)) {
                 const rx = px(xr);
                 const ry = py(fxr);
 
@@ -2058,20 +1401,13 @@
 
         if (!width || !height) return;
 
-        if (
-          x < padding ||
-          x > width - padding ||
-          y < padding ||
-          y > height - padding
-        ) {
+        if (x < padding || x > width - padding || y < padding || y > height - padding) {
           graphTooltip.classList.remove("show");
           return;
         }
 
-        const xValue =
-          xmin + ((x - padding) / (width - padding * 2)) * (xmax - xmin);
-        const yValue =
-          ymax - ((y - padding) / (height - padding * 2)) * (ymax - ymin);
+        const xValue = xmin + ((x - padding) / (width - padding * 2)) * (xmax - xmin);
+        const yValue = ymax - ((y - padding) / (height - padding * 2)) * (ymax - ymin);
 
         graphTooltip.innerHTML = `x: ${xValue.toFixed(4)}<br>y: ${yValue.toFixed(4)}`;
         graphTooltip.style.left = `${x + 15}px`;
@@ -2084,9 +1420,7 @@
       });
 
       function guardarEnHistorial(funcion, xl, xu, data) {
-        const historial = JSON.parse(
-          localStorage.getItem("biseccionHistorial") || "[]",
-        );
+        const historial = JSON.parse(localStorage.getItem("biseccionHistorial") || "[]");
 
         const entrada = {
           id: Date.now(),
@@ -2109,13 +1443,10 @@
       }
 
       function renderizarHistorial() {
-        const historial = JSON.parse(
-          localStorage.getItem("biseccionHistorial") || "[]",
-        );
+        const historial = JSON.parse(localStorage.getItem("biseccionHistorial") || "[]");
 
         if (historial.length === 0) {
-          historyList.innerHTML =
-            '<div class="empty-history">No hay cálculos en el historial</div>';
+          historyList.innerHTML = '<div class="empty-history">No hay cálculos en el historial</div>';
           return;
         }
 
@@ -2161,10 +1492,7 @@
             e.stopPropagation();
             const id = parseInt(btn.dataset.id);
             const nuevoHistorial = historial.filter((h) => h.id !== id);
-            localStorage.setItem(
-              "biseccionHistorial",
-              JSON.stringify(nuevoHistorial),
-            );
+            localStorage.setItem("biseccionHistorial", JSON.stringify(nuevoHistorial));
             renderizarHistorial();
           });
         });
@@ -2180,8 +1508,7 @@
         csv += `Iteraciones:,${data.iteraciones_realizadas}\n`;
         csv += `Criterio de parada:,${data.detenido_por}\n`;
         csv += `Intervalo final:,${data.intervalo_final[0]} a ${data.intervalo_final[1]}\n\n`;
-        csv +=
-          "Iteración,xl,xu,xr,f(xr),Error Absoluto,Error Relativo,Error %,Criterio\n";
+        csv += "Iteración,xl,xu,xr,f(xr),Error Absoluto,Error Relativo,Error %,Criterio\n";
 
         data.tabla.forEach((fila) => {
           csv += `${fila.iteracion},${fila.xl},${fila.xu},${fila.xr},${fila.fxr},${fila.ea || ""},${fila.er || ""},${fila.er_pct || ""},"${fila.criterio || ""}"\n`;
@@ -2227,20 +1554,18 @@
       });
 
       document.addEventListener("keydown", (event) => {
-        if (
-          event.key === "Enter" &&
-          document.activeElement.tagName === "INPUT"
-        ) {
+        if (event.key === "Enter" && document.activeElement.tagName === "INPUT") {
           calcular();
         }
       });
 
       document.addEventListener("DOMContentLoaded", () => {
         renderizarHistorial();
+        // Actualiza el año del copyright automáticamente
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+        
         setTimeout(() => {
-          mostrarStatus(
-            "Sistema inicializado. Esperando parámetros de entrada...",
-          );
+          mostrarStatus("Sistema inicializado. Esperando parámetros de entrada...");
         }, 500);
       });
     </script>
